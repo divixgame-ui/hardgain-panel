@@ -653,7 +653,7 @@ function AdminCalendar({clients,events,setEvents}) {
               const isToday=dateStr==="2026-03-08";
               return (
                 <div key={i} style={{borderBottom:"1px solid #0a0a12",borderRight:i%7<6?"1px solid #0a0a12":"none",minHeight:90,padding:6,background:isToday?"#FF6B3508":"transparent"}}>
-                  {d&&<div style={{fontWeight:isToday?900:400,color:isToday?"#FF6B35":d?="#888":"#222",fontSize:12,marginBottom:4,width:22,height:22,background:isToday?"#FF6B35":"none",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{d}</div>}
+                  {d&&<div style={{fontWeight:isToday?900:400,color:isToday?"#FF6B35":d?"#888":"#222",fontSize:12,marginBottom:4,width:22,height:22,background:isToday?"#FF6B35":"none",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{d}</div>}
                   {dayEvents.map(ev=>{
                     const cl=clients.find(c=>c.id===ev.clientId);
                     return (
