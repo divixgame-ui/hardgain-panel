@@ -40,7 +40,7 @@ const G = () => (
       .mobile-menu-btn{display:flex!important}
       .sidebar-panel{transform:translateX(-100%);transition:transform .25s ease}
       .sidebar-panel.open{transform:translateX(0)}
-      main{padding:16px!important;padding-top:56px!important}
+      main{padding:12px!important;padding-top:60px!important}
       .kpi-grid-5{grid-template-columns:repeat(2,1fr)!important}
       .kpi-grid-4{grid-template-columns:repeat(2,1fr)!important}
       .chart-grid-2{grid-template-columns:1fr!important}
@@ -53,6 +53,20 @@ const G = () => (
       .dash-top-row{flex-direction:column!important;gap:8px!important}
       .settings-grid-3{grid-template-columns:1fr!important}
       .map-grid{grid-template-columns:1fr!important}
+      .leads-row{flex-wrap:wrap!important;gap:8px!important}
+      .leads-meta{flex-wrap:wrap!important;gap:6px!important}
+      .cal-grid{grid-template-columns:1fr!important}
+      .cal-cell{min-height:60px!important;padding:3px!important}
+      .cal-day-header{font-size:9px!important;padding:6px 4px!important}
+      .chat-layout{flex-direction:column!important;height:auto!important;max-height:none!important}
+      .chat-sidebar{width:100%!important;height:auto!important;max-height:180px!important;border-right:none!important;border-bottom:1px solid #151525!important}
+      .chat-main{min-height:400px!important}
+      .ticket-row{flex-wrap:wrap!important;gap:8px!important}
+      .quick-contact{grid-template-columns:1fr 1fr!important}
+      .invoice-billing{grid-template-columns:1fr!important}
+      .lead-detail-grid{grid-template-columns:1fr!important}
+      .funnel-row{grid-template-columns:repeat(2,1fr)!important}
+      .campaign-table-row{grid-template-columns:1fr 80px!important}
     }
     @media(max-width:1024px){
       .kpi-grid-5{grid-template-columns:repeat(3,1fr)!important}
@@ -76,11 +90,11 @@ const CLIENTS = [
       {id:"cp2",name:"Retargeting — Video",status:"active",budget:30,spend:361,leads:35,cpl:10.3,start:"2026-03-05",creative:"Karuzelka"},
     ],
     leads:[
-      {id:1,name:"Marek Nowak",phone:"500 111 222",date:"2026-03-08 09:14",status:"new",campaign:"Broad",hot:14},
-      {id:2,name:"Tomasz Kowal",phone:"601 222 333",date:"2026-03-08 07:33",status:"new",campaign:"Retargeting",hot:106},
-      {id:3,name:"Piotr Wiśniewski",phone:"512 333 444",date:"2026-03-07 11:02",status:"contacted",campaign:"Broad",hot:1382},
-      {id:4,name:"Adam Lewandowski",phone:"609 444 555",date:"2026-03-06 14:55",status:"qualified",campaign:"Retargeting",hot:2885},
-      {id:5,name:"Krzysztof Zając",phone:"513 555 666",date:"2026-03-05 20:11",status:"closed_won",campaign:"Interests",hot:4749},
+      {id:1,name:"Marek Nowak",phone:"500 111 222",date:"2026-03-08 09:14",status:"new",campaign:"Broad — Pakiet Roczny",adSet:"Mężczyźni 30-45 Kraków",hot:14,answers:{cel:"Chcę schudnąć 10kg",start:"ASAP",budzet:"499 zł/mies"}},
+      {id:2,name:"Tomasz Kowal",phone:"601 222 333",date:"2026-03-08 07:33",status:"new",campaign:"Retargeting — Video",adSet:"Odwiedzający stronę 30d",hot:106,answers:{cel:"Budowanie masy",start:"Za miesiąc",budzet:"699 zł"}},
+      {id:3,name:"Piotr Wiśniewski",phone:"512 333 444",date:"2026-03-07 11:02",status:"contacted",campaign:"Broad — Pakiet Roczny",adSet:"Mężczyźni 30-45 Kraków",hot:1382,answers:{cel:"Ogólna sprawność",start:"W tym tygodniu",budzet:"Zależy od oferty"}},
+      {id:4,name:"Adam Lewandowski",phone:"609 444 555",date:"2026-03-06 14:55",status:"qualified",campaign:"Retargeting — Video",adSet:"Engagerzy 60d",hot:2885,answers:{cel:"Redukcja tłuszczu",start:"Jutro",budzet:"800 zł/mies"}},
+      {id:5,name:"Krzysztof Zając",phone:"513 555 666",date:"2026-03-05 20:11",status:"closed_won",campaign:"Interests",adSet:"Fitness 25-55",hot:4749,answers:{cel:"Metamorfoza 90 dni",start:"Teraz",budzet:"Bez znaczenia"}},
     ],
     messages:[
       {from:"admin",text:"Cześć! Kampania Broad ruszyła, pierwsze leady już wpadają 🔥",time:"09:00"},
@@ -101,8 +115,8 @@ const CLIENTS = [
     funnel:{clicks:620,leads:34,calls:12,clients:3},
     campaigns:[{id:"cp4",name:"Broad — Personal Training",status:"active",budget:30,spend:750,leads:34,cpl:22.1,start:"2026-02-01",creative:"Video 25s"}],
     leads:[
-      {id:6,name:"Bartek Kowalczyk",phone:"555 111 222",date:"2026-03-08 10:00",status:"new",campaign:"Broad PT",hot:5},
-      {id:7,name:"Rafał Mazur",phone:"666 222 333",date:"2026-03-07 15:30",status:"contacted",campaign:"Broad PT",hot:1110},
+      {id:6,name:"Bartek Kowalczyk",phone:"555 111 222",date:"2026-03-08 10:00",status:"new",campaign:"Broad — Personal Training",adSet:"Mężczyźni 25-50 Nowy Sącz",hot:5,answers:{cel:"Trening personalny 3x/tyg",start:"ASAP",budzet:"400 zł/mies"}},
+      {id:7,name:"Rafał Mazur",phone:"666 222 333",date:"2026-03-07 15:30",status:"contacted",campaign:"Broad — Personal Training",adSet:"Mężczyźni 25-50 Nowy Sącz",hot:1110,answers:{cel:"Powrót do formy",start:"Za 2 tygodnie",budzet:"Do 500 zł"}},
     ],
     messages:[{from:"admin",text:"Raport tygodniowy — 34 leady, CPL 22 zł.",time:"Wtorek"},{from:"client",text:"Możemy zwiększyć budżet?",time:"Wtorek"}],
     tickets:[],creatives:[{id:"cr4",name:"Video — PT",type:"video",status:"approved",campaign:"Broad PT",thumb:"🎬"}],
@@ -393,18 +407,38 @@ function AdminDash({clients,events,onOpen}) {
 
   const evColor={call:"#FF6B35",meeting:"#4ECDC4",onboarding:"#A78BFA",report:"#F7C59F"};
 
+  const activeClients=clients.filter(c=>c.status==="active").length;
+  const todayLeads=clients.flatMap(c=>c.leads).filter(l=>l.hot<=1440).length;
+  const bestCPL=Math.min(...clients.map(c=>c.stats.cpl)).toFixed(1);
+
   return (
     <div style={{padding:28}} className="fu">
-      <div className="dash-top-row" style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:26}}>
+      {/* ── HERO HEADER ── */}
+      <div className="dash-top-row" style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
         <div>
-          <h1 style={{fontSize:24,fontWeight:900,color:"#fff",letterSpacing:"-0.03em"}}>Dashboard</h1>
-          <p style={{color:"#555570",fontSize:12,marginTop:3}}>{new Date().toLocaleDateString("pl-PL",{month:"long",year:"numeric"})} · {clients.length} klientów · {clients.filter(c=>c.status==="active").length} aktywnych</p>
+          <h1 style={{fontSize:26,fontWeight:900,color:"#fff",letterSpacing:"-0.04em",lineHeight:1}}>Dashboard</h1>
+          <p style={{color:"#555570",fontSize:12,marginTop:5,display:"flex",alignItems:"center",gap:8}}>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4,background:"#4ECDC415",border:"1px solid #4ECDC430",borderRadius:6,padding:"2px 8px",color:"#4ECDC4",fontWeight:700,fontSize:11}}>● {activeClients} aktywnych</span>
+            <span>{new Date().toLocaleDateString("pl-PL",{weekday:"short",day:"numeric",month:"short"})}</span>
+          </p>
         </div>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}>
-          {todayEvents.length>0&&<div style={{background:"#FF6B3510",border:"1px solid #FF6B3525",borderRadius:10,padding:"6px 12px",fontSize:11,color:"#FF6B35",fontWeight:700}}>📅 {todayEvents.length} spotkań dziś</div>}
-          <div style={{background:"#0d0d18",border:"1px solid #151525",borderRadius:10,padding:"7px 14px",fontSize:12,color:"#555"}}>Sun, 08 Mar 2026</div>
+        <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+          {todayEvents.length>0&&<div style={{background:"#FF6B3510",border:"1px solid #FF6B3525",borderRadius:10,padding:"7px 12px",fontSize:11,color:"#FF6B35",fontWeight:700}}>📅 {todayEvents.length} spotkań dziś</div>}
+          {hotLeads.length>0&&<div style={{background:"#FF6B3518",border:"1px solid #FF6B3535",borderRadius:10,padding:"7px 12px",fontSize:11,color:"#FF6B35",fontWeight:800,animation:"glow 2s infinite"}}>🔥 {hotLeads.length} gorących leadów</div>}
         </div>
       </div>
+
+      {/* ── ALERT BAR jeśli są gorące leady ── */}
+      {hotLeads.length>0&&(
+        <div style={{background:"linear-gradient(135deg,#FF6B3510,#FF6B3505)",border:"1px solid #FF6B3525",borderRadius:12,padding:"10px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+          <span style={{fontSize:18}}>🚨</span>
+          <div style={{flex:1,minWidth:0}}>
+            <span style={{fontWeight:800,color:"#FF6B35",fontSize:13}}>Pilny kontakt: </span>
+            <span style={{color:"#ccc",fontSize:12}}>{hotLeads.slice(0,2).map(l=>l.name).join(", ")}{hotLeads.length>2?` +${hotLeads.length-2} więcej`:""}</span>
+          </div>
+          <span style={{color:"#FF6B35",fontSize:11,fontWeight:700,flexShrink:0}}>Odpowiedz w &lt;60 min = 3× wyższa konwersja</span>
+        </div>
+      )}
 
       {/* KPI Row */}
       <div className="kpi-grid-5" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:10,marginBottom:20}}>
@@ -457,7 +491,7 @@ function AdminDash({clients,events,onOpen}) {
       </div>
 
       {/* Bottom row: ranking + hot leads + upcoming */}
-      <div className="bottom-grid-3" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
+      <div className="bottom-grid-3" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginTop:14}}>
         {/* Client ranking */}
         <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:16,overflow:"hidden"}}>
           <div style={{padding:"14px 16px",borderBottom:"1px solid #151525"}}><span style={{fontWeight:700,color:"#fff",fontSize:12}}>Ranking klientów</span></div>
@@ -682,16 +716,16 @@ function AdminCalendar({clients,events,setEvents}) {
 
       {view==="month"&&(
         <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:18,overflow:"hidden"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",borderBottom:"1px solid #151525"}}>
-            {["Pon","Wt","Śr","Czw","Pt","Sob","Nd"].map(d=><div key={d} style={{padding:"10px 8px",textAlign:"center",fontSize:10,fontWeight:700,color:"#555570",letterSpacing:"0.08em",textTransform:"uppercase"}}>{d}</div>)}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",borderBottom:"1px solid #151525"}} className="cal-header">
+            {["Pon","Wt","Śr","Czw","Pt","Sob","Nd"].map(d=><div key={d} className="cal-day-header" style={{padding:"8px 4px",textAlign:"center",fontSize:10,fontWeight:700,color:"#555570",letterSpacing:"0.06em",textTransform:"uppercase"}}>{d}</div>)}
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)"}} className="cal-cells">
             {days.map((d,i)=>{
               const dateStr=d?`${monthStr}-${String(d).padStart(2,"0")}`:null;
               const dayEvents=dateStr?events.filter(e=>e.date===dateStr):[];
               const todayStr=new Date().toLocaleDateString("sv-SE");const isToday=dateStr===todayStr;
               return (
-                <div key={i} style={{borderBottom:"1px solid #111120",borderRight:i%7<6?"1px solid #0a0a12":"none",minHeight:90,padding:6,background:isToday?"#FF6B3508":"transparent"}}>
+                <div key={i} className="cal-cell" style={{borderBottom:"1px solid #111120",borderRight:i%7<6?"1px solid #0a0a12":"none",minHeight:90,padding:6,background:isToday?"#FF6B3508":"transparent"}}>
                   {d&&<div style={{fontWeight:isToday?900:400,color:isToday?"#FF6B35":d?"#888":"#222",fontSize:12,marginBottom:4,width:22,height:22,background:isToday?"#FF6B35":"none",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{d}</div>}
                   {dayEvents.map(ev=>{
                     const cl=clients.find(c=>c.id===ev.clientId);
@@ -842,31 +876,76 @@ function AdminCampaigns({clients}) {
 /* ─── LEADS ALL ──────────────────────────────────────────────────── */
 function AdminLeadsAll({clients}) {
   const all=clients.flatMap(c=>c.leads.map(l=>({...l,cName:c.name,cColor:c.color})));
-  const [search,setSearch]=useState(""); const [filter,setFilter]=useState("all");
-  const filtered=all.filter(l=>(filter==="all"||l.status===filter)&&(!search||l.name.toLowerCase().includes(search.toLowerCase())||l.phone.includes(search)));
+  const [search,setSearch]=useState(""); const [filter,setFilter]=useState("all"); const [expanded,setExpanded]=useState(null);
+  const filtered=all.filter(l=>(filter==="all"||l.status===filter)&&(!search||l.name.toLowerCase().includes(search.toLowerCase())||l.phone.includes(search)||(l.campaign||"").toLowerCase().includes(search.toLowerCase())));
   return (
     <div style={{padding:28}} className="fu">
       <SH title="Wszystkie leady" sub={`${all.length} łącznie · ${all.filter(l=>l.hot<=120).length} gorących`}/>
-      <div style={{display:"flex",gap:10,marginBottom:16,flexWrap:"wrap"}}>
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Szukaj..." style={{background:"#0d0d18",border:"1px solid #151520",borderRadius:10,padding:"8px 13px",color:"#ddd",fontSize:13,outline:"none",flex:"0 0 240px"}}/>
-        <div style={{display:"flex",gap:4,background:"#08080f",border:"1px solid #101018",borderRadius:10,padding:3}}>
-          {["all","new","contacted","qualified","closed_won"].map(s=>(
-            <button key={s} onClick={()=>setFilter(s)} style={{background:filter===s?"#131320":"none",border:"none",color:filter===s?"#fff":"#5a5a7a",borderRadius:8,padding:"5px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit",fontWeight:filter===s?700:400}}>{s==="all"?"Wszystkie":LEAD_S[s]?.[0]||s}</button>
+
+      {/* Statystyki */}
+      <div className="kpi-grid-4" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:18}}>
+        {[["Wszystkie",all.length,"#FF6B35","👥"],["Nowe",all.filter(l=>l.status==="new").length,"#4ECDC4","🆕"],["Gorące",all.filter(l=>l.hot<=60).length,"#FF6B35","🔥"],["Wygranie",all.filter(l=>l.status==="closed_won").length,"#34D399","✅"]].map(([l,v,c,ic])=>(
+          <div key={l} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${c}22`,borderRadius:12,padding:"12px 16px",cursor:"pointer"}} onClick={()=>setFilter(l==="Wszystkie"?"all":l==="Nowe"?"new":l==="Gorące"?"new":l==="Wygranie"?"closed_won":"all")}>
+            <div style={{fontSize:18,marginBottom:4}}>{ic}</div>
+            <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:22,fontWeight:900,color:c}}>{v}</div>
+            <div style={{fontSize:10,color:"#666680",textTransform:"uppercase",letterSpacing:"0.08em",marginTop:2}}>{l}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Filtry */}
+      <div style={{display:"flex",gap:10,marginBottom:16,flexWrap:"wrap",alignItems:"center"}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="🔍  Szukaj po nazwie, telefonie, kampanii..." style={{background:"#0d0d18",border:"1px solid #151520",borderRadius:10,padding:"8px 13px",color:"#ddd",fontSize:13,outline:"none",flex:"1 1 240px",minWidth:180}}/>
+        <div className="tabs-scroll" style={{display:"flex",gap:4,background:"#08080f",border:"1px solid #101018",borderRadius:10,padding:3}}>
+          {["all","new","contacted","qualified","closed_won","closed_lost"].map(s=>(
+            <button key={s} onClick={()=>setFilter(s)} style={{background:filter===s?"#131320":"none",border:"none",color:filter===s?"#fff":"#5a5a7a",borderRadius:8,padding:"5px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit",fontWeight:filter===s?700:400,whiteSpace:"nowrap"}}>{s==="all"?"Wszystkie":LEAD_S[s]?.[0]||s}</button>
           ))}
         </div>
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        {filtered.length===0&&<div style={{textAlign:"center",color:"#555570",padding:"40px 0",fontSize:13}}>Brak leadów spełniających kryteria</div>}
         {filtered.map(l=>(
-          <div key={l.id} className="hr" style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${l.hot<=60?"#FF6B3520":"#151520"}`,borderRadius:12,padding:"11px 16px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",transition:"background .1s",flexWrap:"wrap"}}>
-            <div style={{width:32,height:32,background:"#FF6B3515",borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",color:"#FF6B35",fontWeight:900,fontSize:12,flexShrink:0}}>{l.name.charAt(0)}</div>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontWeight:700,color:"#e0e0e8",fontSize:13}}>{l.name}</div>
-              <div style={{color:"#555570",fontSize:11,marginTop:1}}>{l.phone} · {l.campaign}</div>
+          <div key={l.id} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${l.hot<=60?"#FF6B3530":"#151520"}`,borderRadius:14,overflow:"hidden",transition:"border-color .15s"}}>
+            {/* Główny wiersz */}
+            <div className="hr leads-row" onClick={()=>setExpanded(expanded===l.id?null:l.id)} style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
+              <div style={{width:36,height:36,background:l.hot<=60?"#FF6B3520":"#1a1a2e",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",color:l.hot<=60?"#FF6B35":"#888",fontWeight:900,fontSize:14,flexShrink:0}}>{l.name.charAt(0)}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:800,color:"#e8e8f0",fontSize:13}}>{l.name}</div>
+                <div style={{color:"#666680",fontSize:11,marginTop:2,display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+                  <span style={{fontFamily:"'JetBrains Mono',monospace"}}>{l.phone}</span>
+                  {l.campaign&&<><span style={{color:"#2a2a3e"}}>·</span><span style={{color:"#888"}}>{l.campaign}</span></>}
+                  {l.adSet&&<><span style={{color:"#2a2a3e"}}>·</span><span style={{color:"#555570",fontSize:10}}>{l.adSet}</span></>}
+                </div>
+              </div>
+              <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0,flexWrap:"wrap"}}>
+                <HotTimer m={l.hot}/>
+                <span style={{color:l.cColor,background:l.cColor+"15",border:`1px solid ${l.cColor}25`,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:700,whiteSpace:"nowrap"}}>{l.cName}</span>
+                <LBadge s={l.status}/>
+                <a href={`tel:${l.phone.replace(/\s/g,"")}`} onClick={e=>e.stopPropagation()} style={{background:"#FF6B3518",border:"1px solid #FF6B3530",color:"#FF6B35",borderRadius:8,padding:"6px 10px",fontSize:11,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>📞</a>
+                <a href={`https://wa.me/48${l.phone.replace(/\s/g,"")}`} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{background:"#25D36615",border:"1px solid #25D36630",color:"#25D366",borderRadius:8,padding:"6px 10px",fontSize:11,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>💬</a>
+                <span style={{color:"#555",fontSize:10,marginLeft:2}}>{expanded===l.id?"▲":"▼"}</span>
+              </div>
             </div>
-            <HotTimer m={l.hot}/>
-            <span style={{color:l.cColor,background:l.cColor+"12",border:`1px solid ${l.cColor}22`,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:700,whiteSpace:"nowrap"}}>{l.cName}</span>
-            <LBadge s={l.status}/>
-            <a href={`tel:${l.phone}`} style={{background:"#FF6B3515",border:"1px solid #FF6B3530",color:"#FF6B35",borderRadius:8,padding:"5px 10px",fontSize:11,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap",flexShrink:0}}>📞 Zadzwoń</a>
+            {/* Rozwinięte: odpowiedzi z formularza */}
+            {expanded===l.id&&l.answers&&(
+              <div style={{padding:"12px 16px 16px",borderTop:"1px solid #111120",background:"#080810"}}>
+                <div style={{fontSize:10,fontWeight:700,color:"#555570",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:10}}>Odpowiedzi z formularza</div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}} className="lead-detail-grid">
+                  {[["🎯 Cel",l.answers.cel],["⏰ Start",l.answers.start],["💰 Budżet",l.answers.budzet]].map(([label,val])=>val&&(
+                    <div key={label} style={{background:"#0d0d18",borderRadius:10,padding:"10px 12px",border:"1px solid #1a1a2a"}}>
+                      <div style={{fontSize:10,color:"#555570",marginBottom:4}}>{label}</div>
+                      <div style={{fontSize:13,color:"#ddd",fontWeight:600}}>{val}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{marginTop:10,display:"flex",gap:8,flexWrap:"wrap"}}>
+                  <a href={`tel:${l.phone.replace(/\s/g,"")}`} style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:9,padding:"8px 16px",fontSize:12,fontWeight:800,textDecoration:"none",display:"flex",alignItems:"center",gap:6}}>📞 Zadzwoń teraz</a>
+                  <a href={`https://wa.me/48${l.phone.replace(/\s/g,"")}`} target="_blank" rel="noreferrer" style={{background:"#25D36618",border:"1px solid #25D36630",color:"#25D366",borderRadius:9,padding:"8px 16px",fontSize:12,fontWeight:800,textDecoration:"none",display:"flex",alignItems:"center",gap:6}}>💬 WhatsApp</a>
+                  <div style={{fontSize:11,color:"#555570",padding:"8px 0",display:"flex",alignItems:"center",gap:4}}>📅 {l.date}</div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -920,8 +999,8 @@ function AdminChat({clients,setClients}) {
     setMsg("");
   };
   return (
-    <div style={{display:"flex",height:"100vh",maxHeight:"100vh"}} className="fu">
-      <div style={{width:220,borderRight:"1px solid #151525",display:"flex",flexDirection:"column",background:"#08080f"}}>
+    <div className="chat-layout fu" style={{display:"flex",height:"calc(100vh - 60px)",maxHeight:"calc(100vh - 60px)"}}>
+      <div className="chat-sidebar" style={{width:220,borderRight:"1px solid #151525",display:"flex",flexDirection:"column",background:"#08080f",overflowY:"auto",flexShrink:0}}>
         <div style={{padding:"16px 14px",borderBottom:"1px solid #151525"}}><div style={{fontWeight:800,color:"#fff",fontSize:13}}>Wiadomości</div></div>
         {clients.map(c=>(
           <div key={c.id} onClick={()=>setActive(c.id)} style={{padding:"10px 13px",borderBottom:"1px solid #0a0a10",cursor:"pointer",background:active===c.id?"#0f0f1a":"transparent",display:"flex",alignItems:"center",gap:9,transition:"background .1s"}}>
@@ -933,7 +1012,7 @@ function AdminChat({clients,setClients}) {
           </div>
         ))}
       </div>
-      <div style={{flex:1,display:"flex",flexDirection:"column",background:"#060608"}}>
+      <div className="chat-main" style={{flex:1,display:"flex",flexDirection:"column",background:"#060608",minWidth:0}}>
         {cl&&<>
           <div style={{padding:"13px 18px",borderBottom:"1px solid #151525",display:"flex",alignItems:"center",gap:9,background:"#08080f"}}>
             <div style={{width:28,height:28,background:cl.color+"15",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:cl.color,fontSize:11,flexShrink:0}}>{cl.avatar}</div>
@@ -962,19 +1041,59 @@ function AdminChat({clients,setClients}) {
 
 /* ─── TICKETS ────────────────────────────────────────────────────── */
 function AdminTickets({clients,setClients}) {
-  const all=clients.flatMap(c=>c.tickets.map(t=>({...t,cName:c.name,cColor:c.color,cId:c.id})));
-  const pc={high:"#FF6B35",medium:"#F7C59F",low:"#444"};
+  const all=clients.flatMap(c=>{const cl=clients.find(x=>x.id===c.id);return c.tickets.map(t=>({...t,cName:c.name,cColor:c.color,cId:c.id,cPhone:c.phone}));});
+  const pc={high:"#FF6B35",medium:"#F7C59F",low:"#555570"};
   const resolve=(cid,tid)=>setClients(prev=>prev.map(c=>c.id===cid?{...c,tickets:c.tickets.map(t=>t.id===tid?{...t,status:"resolved"}:t)}:c));
+  const openCount=all.filter(t=>t.status==="open").length;
   return (
     <div style={{padding:28}} className="fu">
-      <SH title="Zgłoszenia" sub={`${all.filter(t=>t.status==="open").length} otwartych`} badge={all.filter(t=>t.status==="open").length}/>
-      {all.length===0?<div style={{textAlign:"center",color:"#4a4a6a",padding:"50px 0"}}>Brak zgłoszeń 🎉</div>:
+      <SH title="Zgłoszenia" sub={`${openCount} otwartych · ${all.length} łącznie`}/>
+
+      {/* Szybki kontakt - zawsze widoczny */}
+      <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #1a1a2e",borderRadius:16,padding:"16px 20px",marginBottom:20}}>
+        <div style={{fontWeight:800,color:"#fff",fontSize:13,marginBottom:4}}>⚡ Szybki kontakt z klientem</div>
+        <div style={{color:"#666680",fontSize:12,marginBottom:14}}>Nie czekaj na odpowiedź — zadzwoń lub napisz od razu</div>
+        <div className="quick-contact" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8}}>
+          {clients.slice(0,4).map(c=>(
+            <div key={c.id} style={{background:"#0a0a12",border:"1px solid #151525",borderRadius:12,padding:"10px 12px"}}>
+              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+                <div style={{width:22,height:22,background:c.color+"20",borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:c.color,fontSize:9,flexShrink:0}}>{c.avatar}</div>
+                <div style={{fontSize:11,fontWeight:700,color:"#bbb",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
+              </div>
+              <div style={{display:"flex",gap:4}}>
+                <a href={`tel:${c.phone.replace(/\s/g,"")}`} style={{flex:1,background:"#FF6B3515",border:"1px solid #FF6B3525",color:"#FF6B35",borderRadius:7,padding:"5px 0",fontSize:10,fontWeight:700,textDecoration:"none",textAlign:"center"}}>📞</a>
+                <a href={`https://wa.me/48${c.phone.replace(/\s/g,"")}`} target="_blank" rel="noreferrer" style={{flex:1,background:"#25D36615",border:"1px solid #25D36625",color:"#25D366",borderRadius:7,padding:"5px 0",fontSize:10,fontWeight:700,textDecoration:"none",textAlign:"center"}}>💬</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {all.length===0?(
+        <div style={{textAlign:"center",padding:"50px 0"}}>
+          <div style={{fontSize:40,marginBottom:12}}>🎉</div>
+          <div style={{color:"#4ECDC4",fontWeight:800,fontSize:16}}>Brak otwartych zgłoszeń</div>
+          <div style={{color:"#555570",fontSize:12,marginTop:6}}>Świetna robota — wszystko pod kontrolą</div>
+        </div>
+      ):
       all.map(t=>(
-        <div key={t.id} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${t.status==="open"?"#151520":"#0c0c18"}`,borderRadius:14,padding:"14px 18px",display:"flex",alignItems:"center",gap:12,marginBottom:8,opacity:t.status==="resolved"?.4:1}}>
-          <div style={{flex:1}}><div style={{fontWeight:700,color:"#e0e0e8",fontSize:13}}>{t.title}</div><div style={{color:"#555570",fontSize:11,marginTop:2}}><span style={{color:t.cColor}}>{t.cName}</span> · {t.date}</div></div>
-          <span style={{background:pc[t.priority]+"18",color:pc[t.priority],border:`1px solid ${pc[t.priority]}30`,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:700,textTransform:"uppercase"}}>{t.priority}</span>
-          <span style={{background:t.status==="open"?"#FF6B3518":"#4ECDC418",color:t.status==="open"?"#FF6B35":"#4ECDC4",borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:700}}>{t.status==="open"?"Otwarte":"Rozwiązane"}</span>
-          {t.status==="open"&&<button onClick={()=>resolve(t.cId,t.id)} style={{background:"#111120",border:"1px solid #1e1e2e",color:"#555",borderRadius:8,padding:"5px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit"}}>Zamknij</button>}
+        <div key={t.id} className="ticket-row" style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${t.status==="open"?"#FF6B3520":"#111120"}`,borderRadius:14,padding:"14px 18px",display:"flex",alignItems:"center",gap:10,marginBottom:8,opacity:t.status==="resolved"?.45:1,flexWrap:"wrap"}}>
+          <div style={{flex:1,minWidth:200}}>
+            <div style={{fontWeight:700,color:"#e0e0e8",fontSize:13}}>{t.title}</div>
+            <div style={{color:"#555570",fontSize:11,marginTop:2,display:"flex",gap:6,flexWrap:"wrap"}}>
+              <span style={{color:t.cColor}}>{t.cName}</span>
+              <span>·</span><span>{t.date}</span>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+            <span style={{background:pc[t.priority]+"18",color:pc[t.priority],border:`1px solid ${pc[t.priority]}30`,borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:700,textTransform:"uppercase"}}>{t.priority}</span>
+            <span style={{background:t.status==="open"?"#FF6B3518":"#4ECDC418",color:t.status==="open"?"#FF6B35":"#4ECDC4",borderRadius:6,padding:"2px 8px",fontSize:10,fontWeight:700}}>{t.status==="open"?"● Otwarte":"✓ Rozwiązane"}</span>
+            {t.status==="open"&&<>
+              <a href={`tel:${t.cPhone?.replace(/\s/g,"")}`} style={{background:"#FF6B3515",border:"1px solid #FF6B3525",color:"#FF6B35",borderRadius:7,padding:"5px 9px",fontSize:11,fontWeight:700,textDecoration:"none"}}>📞</a>
+              <a href={`https://wa.me/48${t.cPhone?.replace(/\s/g,"")}`} target="_blank" rel="noreferrer" style={{background:"#25D36615",border:"1px solid #25D36625",color:"#25D366",borderRadius:7,padding:"5px 9px",fontSize:11,fontWeight:700,textDecoration:"none"}}>💬 WA</a>
+              <button onClick={()=>resolve(t.cId,t.id)} style={{background:"#111120",border:"1px solid #1e1e2e",color:"#666",borderRadius:8,padding:"5px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit"}}>✓ Rozwiąż</button>
+            </>}
+          </div>
         </div>
       ))}
     </div>
@@ -1063,6 +1182,34 @@ function AdminSettings() {
             </div>
           </div>
           <button onClick={()=>showToast("✅ Zmiany zapisane")} style={{marginTop:16,background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"11px 22px",fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Zapisz zmiany →</button>
+
+          {/* Powiadomienia */}
+          <div style={{marginTop:28,paddingTop:22,borderTop:"1px solid #151525"}}>
+            <div style={{fontWeight:800,color:"#fff",fontSize:13,marginBottom:16}}>🔔 Powiadomienia</div>
+            {[["Nowy lead — SMS","Otrzymaj SMS gdy wpada nowy lead","sms",true],["Nowy lead — email","Kopia każdego leada na email","email",true],["Gorący lead alert","Gdy lead nie był kontaktowany >30 min","hot",false],["Raport tygodniowy","Podsumowanie w każdy poniedziałek","weekly",true]].map(([name,desc,key,def])=>{
+              const [on,setOn]=useState(def);
+              return(
+                <div key={key} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid #111120"}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>{name}</div>
+                    <div style={{fontSize:11,color:"#555570",marginTop:2}}>{desc}</div>
+                  </div>
+                  <div onClick={()=>{setOn(v=>!v);showToast(on?"🔕 Wyłączono":"🔔 Włączono");}} style={{width:40,height:22,background:on?TENANT.primary:"#1a1a2a",borderRadius:11,cursor:"pointer",position:"relative",transition:"background .2s",flexShrink:0}}>
+                    <div style={{position:"absolute",top:3,left:on?21:3,width:16,height:16,background:"#fff",borderRadius:"50%",transition:"left .2s",boxShadow:"0 1px 4px rgba(0,0,0,.4)"}}/>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* WhatsApp / SMS numer agenta */}
+          <div style={{marginTop:22,paddingTop:22,borderTop:"1px solid #151525"}}>
+            <div style={{fontWeight:800,color:"#fff",fontSize:13,marginBottom:12}}>📱 Kontakt agenta (do szybkich odpowiedzi)</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              <input defaultValue="+48 600 000 000" style={{flex:1,minWidth:180,background:"#08080f",border:"1px solid #151525",borderRadius:10,padding:"10px 14px",color:"#ddd",fontSize:13,outline:"none"}} placeholder="Telefon agenta"/>
+              <a href="https://wa.me/48600000000" target="_blank" rel="noreferrer" style={{background:"#25D36618",border:"1px solid #25D36630",color:"#25D366",borderRadius:10,padding:"10px 18px",fontSize:12,fontWeight:800,textDecoration:"none",display:"flex",alignItems:"center",gap:6,whiteSpace:"nowrap"}}>💬 Test WhatsApp</a>
+            </div>
+          </div>
         </div>
       )}
       {tab==="team"&&(
@@ -1476,7 +1623,7 @@ function ChatPane({messages,clientId,clients,setClients}) {
     setMsg("");
   };
   return (
-    <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:16,display:"flex",flexDirection:"column",height:400}}>
+    <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:16,display:"flex",flexDirection:"column",height:"min(400px,60vh)"}}>
       <div style={{flex:1,overflow:"auto",padding:"14px 16px 8px"}}>
         {live.map((m,i)=>{const mine=m.from==="client";return(
           <div key={i} style={{display:"flex",justifyContent:mine?"flex-end":"flex-start",marginBottom:9}}>
