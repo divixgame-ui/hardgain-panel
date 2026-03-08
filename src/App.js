@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { jsPDF } from "jspdf";
 
 /* ─── TENANT CONFIG (white-label ready) ─────────────────────────────── */
 const TENANT = {
@@ -192,8 +193,60 @@ const LBadge = ({s}) => { const [l,c]=LEAD_S[s]||["?","#888"]; return <span styl
 /* ─── TOAST ──────────────────────────────────────────────────────────── */
 let _toastTimeout=null;
 let _setToastGlobal=null;
-function showToast(msg){if(_setToastGlobal){_setToastGlobal(msg);clearTimeout(_toastTimeout);_toastTimeout=setTimeout(()=>_setToastGlobal(null),2500);}}
-function Toast(){const [msg,setMsg]=useState(null);useEffect(()=>{_setToastGlobal=setMsg;return()=>{_setToastGlobal=null;};},[]);if(!msg)return null;return <div style={{position:"fixed",bottom:28,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#1a1a2e,#111120)",border:"1px solid #2a2a3e",borderRadius:14,padding:"12px 24px",color:"#fff",fontSize:13,fontWeight:700,zIndex:9999,boxShadow:"0 8px 32px rgba(0,0,0,.6)",animation:"fu .2s ease forwards",fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>{msg}</div>;}
+function showToast(msg){if(_setToastGlobal){_setToastGlobal({type:"info",msg});clearTimeout(_toastTimeout);_toastTimeout=setTimeout(()=>_setToastGlobal(null),3000);}}
+function showLeadToast(lead){if(_setToastGlobal){_setToastGlobal({type:"lead",lead});clearTimeout(_toastTimeout);_toastTimeout=setTimeout(()=>_setToastGlobal(null),6000);}}
+
+/* FAKE LIVE NAMES for demo notifications */
+const FAKE_LEADS=[
+  {name:"Piotr Malinowski",city:"Kraków",campaign:"Broad — Pakiet Roczny",phone:"512 ***  ***"},
+  {name:"Dawid Nowicki",city:"Warszawa",campaign:"Retargeting — Video",phone:"601 *** ***"},
+  {name:"Michał Kowalczyk",city:"Gdańsk",campaign:"Interests — Fitness",phone:"500 *** ***"},
+  {name:"Kamil Wróbel",city:"Wrocław",campaign:"Broad — Personal Training",phone:"666 *** ***"},
+  {name:"Artur Szymański",city:"Poznań",campaign:"Launch — Karnet",phone:"777 *** ***"},
+  {name:"Łukasz Jabłoński",city:"Kraków",campaign:"Broad — Pakiet Roczny",phone:"513 *** ***"},
+  {name:"Tomasz Dąbrowski",city:"Warszawa",campaign:"Retargeting — Video",phone:"609 *** ***"},
+];
+
+function Toast(){
+  const [data,setData]=useState(null);
+  useEffect(()=>{_setToastGlobal=setData;return()=>{_setToastGlobal=null;};},[]);
+  if(!data) return null;
+  if(data.type==="lead"){
+    const l=data.lead;
+    return(
+      <div style={{position:"fixed",bottom:24,right:24,left:"auto",transform:"none",background:"linear-gradient(135deg,#0d1a12,#081208)",border:"2px solid #4ECDC440",borderRadius:18,padding:"16px 20px",color:"#fff",zIndex:9999,boxShadow:"0 12px 48px rgba(0,0,0,.8),0 0 0 1px #4ECDC420",animation:"fu .25s ease forwards",fontFamily:"'Syne',sans-serif",minWidth:280,maxWidth:320}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+          <div style={{width:10,height:10,borderRadius:"50%",background:"#4ECDC4",boxShadow:"0 0 8px #4ECDC4",flexShrink:0,animation:"glow 1s infinite"}}/>
+          <span style={{fontSize:10,color:"#4ECDC4",fontWeight:800,textTransform:"uppercase",letterSpacing:"0.12em"}}>Nowy lead właśnie wpadł</span>
+        </div>
+        <div style={{fontWeight:900,color:"#fff",fontSize:16,marginBottom:2}}>{l.name}</div>
+        <div style={{color:"#888",fontSize:12,marginBottom:8}}>{l.city} · {l.campaign}</div>
+        <div style={{display:"flex",gap:8}}>
+          <a href={`tel:${l.phone}`} style={{flex:1,background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:9,padding:"8px 0",fontSize:12,fontWeight:800,textDecoration:"none",textAlign:"center"}}>📞 Zadzwoń</a>
+          <button onClick={()=>setData(null)} style={{background:"#111",border:"1px solid #222",color:"#555",borderRadius:9,padding:"8px 12px",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>✕</button>
+        </div>
+      </div>
+    );
+  }
+  return <div style={{position:"fixed",bottom:28,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#1a1a2e,#111120)",border:"1px solid #2a2a3e",borderRadius:14,padding:"12px 24px",color:"#fff",fontSize:13,fontWeight:700,zIndex:9999,boxShadow:"0 8px 32px rgba(0,0,0,.6)",animation:"fu .2s ease forwards",fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>{data.msg}</div>;
+}
+
+/* Live lead simulator — fires when admin is logged in */
+function useLiveLeads(active){
+  useEffect(()=>{
+    if(!active) return;
+    let idx=0;
+    const fire=()=>{
+      const l=FAKE_LEADS[idx%FAKE_LEADS.length];
+      idx++;
+      showLeadToast(l);
+    };
+    // First notification after 20s, then every 45-90s
+    const t1=setTimeout(fire,20000);
+    const interval=setInterval(fire,Math.random()*45000+45000);
+    return()=>{clearTimeout(t1);clearInterval(interval);};
+  },[active]);
+}
 
 function HotTimer({m}) {
   const [tick,setTick]=useState(0);
@@ -346,18 +399,49 @@ function Login({onLogin}) {
 /* ════════════════════════════════════════════════════════════════════
    ADMIN APP
 ════════════════════════════════════════════════════════════════════ */
+
+/* ─── ONBOARDING MODAL ───────────────────────────────────────────── */
+function OnboardingModal({onClose,clientCount,totalLeads}) {
+  const [step,setStep]=useState(0);
+  const steps=[
+    {icon:"🚀",title:"Witaj w Hardgain Panel",sub:"Zarządzaj kampaniami, leadami i klientami w jednym miejscu",cta:"Pokaż mi"},
+    {icon:"🔥",title:`${totalLeads} leadów · ${clientCount} aktywnych klientów`,sub:"Wszystkie dane kampanii Meta Ads w czasie rzeczywistym. CPL, wydatki, konwersje — bez Excela.",cta:"Dalej"},
+    {icon:"📞",title:"Gorący lead = zadzwoń w 60 sekund",sub:"System alarmuje gdy lead jest gorący. Odpowiedź w <60 min zwiększa konwersję 3×.",cta:"Dalej"},
+    {icon:"⚡",title:"White-label dla Twoich klientów",sub:"Każdy klient dostaje panel z Twoim logo. 299 zł/mies pasywnego dochodu od każdej siłowni.",cta:"Wchodzę →"},
+  ];
+  const s=steps[step];
+  return(
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.85)",zIndex:9998,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(8px)"}} onClick={step===steps.length-1?onClose:undefined}>
+      <div style={{background:"linear-gradient(135deg,#0d0d1a,#080810)",border:"1px solid #2a2a3e",borderRadius:24,width:"100%",maxWidth:440,padding:40,textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,.9)"}} onClick={e=>e.stopPropagation()}>
+        <div style={{fontSize:64,marginBottom:20,lineHeight:1}}>{s.icon}</div>
+        <h2 style={{fontSize:22,fontWeight:900,color:"#fff",letterSpacing:"-0.03em",marginBottom:10,lineHeight:1.2}}>{s.title}</h2>
+        <p style={{color:"#666680",fontSize:14,lineHeight:1.6,marginBottom:32}}>{s.sub}</p>
+        {/* Progress dots */}
+        <div style={{display:"flex",justifyContent:"center",gap:6,marginBottom:24}}>
+          {steps.map((_,i)=><div key={i} style={{width:i===step?20:6,height:6,borderRadius:3,background:i===step?TENANT.primary:"#222",transition:"all .3s"}}/>)}
+        </div>
+        <button onClick={()=>step<steps.length-1?setStep(s=>s+1):onClose()} style={{width:"100%",background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:12,padding:"14px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit",fontSize:15,boxShadow:`0 6px 24px ${TENANT.primary}50`}}>{s.cta}</button>
+        {step>0&&<button onClick={onClose} style={{marginTop:12,background:"none",border:"none",color:"#444",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>Pomiń</button>}
+      </div>
+    </div>
+  );
+}
+
 function AdminApp({user,onLogout}) {
   const [view,setView]=useState("dashboard");
   const [clients,setClients]=useState(CLIENTS);
   const [events,setEvents]=useState(CALENDAR_EVENTS);
   const [focusId,setFocusId]=useState(null);
+  useLiveLeads(true); /* 🔥 live lead notifications */
   const openTickets=clients.flatMap(c=>c.tickets).filter(t=>t.status==="open").length;
   const focus=clients.find(c=>c.id===focusId);
   const openClient=(id)=>{setFocusId(id);setView("client_focus");};
 
+  const [showOnboarding,setShowOnboarding]=useState(true);
   return (
     <div style={{display:"flex",minHeight:"100vh",background:"#060608"}}>
       <G/>
+      {showOnboarding&&<OnboardingModal onClose={()=>setShowOnboarding(false)} clientCount={clients.length} totalLeads={clients.reduce((s,c)=>s+c.stats.leads,0)}/>}
       <Sidebar nav={ADMIN_NAV} view={view} setView={v=>{setView(v);setFocusId(null);}} onLogout={onLogout} badge={openTickets} u={user}/>
       <main style={{marginLeft:"var(--sidebar-ml,220px)",flex:1,overflowX:"hidden"}}>
         {!focusId&&view==="dashboard"&&<AdminDash clients={clients} events={events} onOpen={openClient}/>}
@@ -973,7 +1057,67 @@ function AdminReports({clients}) {
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
               <div style={{width:34,height:34,background:c.color+"15",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:c.color,fontSize:13,flexShrink:0}}>{c.avatar}</div>
               <div style={{flex:1}}><div style={{fontWeight:800,color:"#fff",fontSize:14}}>{c.name}</div><div style={{color:"#555570",fontSize:11}}>Plan {c.plan} · {fmt(c.stats.spend)} zł wydano łącznie</div></div>
-              <button onClick={()=>showToast("📄 Export PDF — wkrótce dostępny")} style={{background:"#FF6B3515",border:"1px solid #FF6B3525",color:"#FF6B35",borderRadius:8,padding:"6px 12px",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>PDF ↓</button>
+              <button onClick={()=>{
+                try{
+                  const doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+                  // Background
+                  doc.setFillColor(6,6,8); doc.rect(0,0,210,297,"F");
+                  // Header bar
+                  doc.setFillColor(255,107,53); doc.rect(0,0,210,18,"F");
+                  doc.setTextColor(255,255,255); doc.setFontSize(11); doc.setFont("helvetica","bold");
+                  doc.text("HARDGAIN PANEL — Raport Miesięczny",14,12);
+                  doc.text(new Date().toLocaleDateString("pl-PL",{month:"long",year:"numeric"}),196,12,"right");
+                  // Client section
+                  doc.setFontSize(18); doc.setFont("helvetica","bold"); doc.setTextColor(255,255,255);
+                  doc.text(c.name,14,34);
+                  doc.setFontSize(9); doc.setFont("helvetica","normal"); doc.setTextColor(100,100,128);
+                  doc.text(`Plan ${c.plan} · ${c.city} · ${c.email}`,14,41);
+                  // Divider
+                  doc.setDrawColor(42,42,62); doc.setLineWidth(0.3); doc.line(14,46,196,46);
+                  // KPI boxes
+                  const kpis=[["Leady",c.stats.leads,"#FF6B35"],["CPL",c.stats.cpl+" zł","#4ECDC4"],["Wydano",c.stats.spend+" zł","#F7C59F"],["Konwersja",c.stats.conversion+"%","#A78BFA"]];
+                  kpis.forEach(([label,value,color],i)=>{
+                    const x=14+i*47; const y=52;
+                    const rgb=color==="white"?[255,255,255]:color==="gray"?[100,100,128]:[parseInt(color.slice(1,3),16),parseInt(color.slice(3,5),16),parseInt(color.slice(5,7),16)];
+                    doc.setFillColor(13,13,26); doc.roundedRect(x,y,43,22,2,2,"F");
+                    doc.setTextColor(...rgb); doc.setFontSize(14); doc.setFont("helvetica","bold");
+                    doc.text(String(value),x+4,y+12);
+                    doc.setTextColor(80,80,100); doc.setFontSize(7); doc.setFont("helvetica","normal");
+                    doc.text(label.toUpperCase(),x+4,y+19);
+                  });
+                  // Campaigns
+                  doc.setTextColor(255,255,255); doc.setFontSize(11); doc.setFont("helvetica","bold");
+                  doc.text("Kampanie",14,86);
+                  let y=93;
+                  c.campaigns.forEach(cp=>{
+                    doc.setFillColor(13,13,26); doc.roundedRect(14,y,182,14,2,2,"F");
+                    doc.setTextColor(200,200,210); doc.setFontSize(9); doc.setFont("helvetica","bold");
+                    doc.text(cp.name,18,y+6);
+                    doc.setTextColor(80,80,100); doc.setFontSize(8); doc.setFont("helvetica","normal");
+                    doc.text(`Leady: ${cp.leads} · CPL: ${cp.cpl} zł · Wydano: ${cp.spend} zł`,18,y+11);
+                    y+=17;
+                  });
+                  // Leads table
+                  y+=6; doc.setTextColor(255,255,255); doc.setFontSize(11); doc.setFont("helvetica","bold");
+                  doc.text("Ostatnie leady",14,y); y+=7;
+                  c.leads.slice(0,5).forEach((l,i)=>{
+                    doc.setFillColor(i%2===0?13:10,i%2===0?13:10,i%2===0?26:20);
+                    doc.rect(14,y,182,9,"F");
+                    doc.setTextColor(200,200,210); doc.setFontSize(8); doc.setFont("helvetica","normal");
+                    doc.text(l.name,18,y+6);
+                    doc.text(l.phone,80,y+6);
+                    doc.text(l.campaign||"",120,y+6);
+                    doc.text(l.date,172,y+6);
+                    y+=9;
+                  });
+                  // Footer
+                  doc.setFillColor(13,13,20); doc.rect(0,282,210,15,"F");
+                  doc.setTextColor(60,60,80); doc.setFontSize(7); doc.setFont("helvetica","normal");
+                  doc.text("Hardgain Panel · hardgain.pl · Wygenerowano automatycznie",105,290,"center");
+                  doc.save(`raport_${c.name.replace(/\s/g,"_")}_${new Date().toISOString().slice(0,7)}.pdf`);
+                  showToast("✅ PDF wygenerowany i pobrany!");
+                }catch(e){showToast("❌ Błąd generowania PDF: "+e.message);}
+              }} style={{background:"#FF6B3515",border:"1px solid #FF6B3525",color:"#FF6B35",borderRadius:8,padding:"6px 12px",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>PDF ↓</button>
             </div>
             <ResponsiveContainer width="100%" height={80}>
               <BarChart data={mData} barSize={16}>
@@ -1468,9 +1612,87 @@ function AdminClientFocus({client,clients,setClients,events,setEvents,onBack}) {
   );
 }
 
+/* ─── ROI CALCULATOR ─────────────────────────────────────────────── */
+function ClientROI({c,isPro,onUpgrade}) {
+  const [budget,setBudget]=useState(c.stats.spend||1500);
+  const [closeRate,setCloseRate]=useState(c.stats.conversion||12);
+  const [avgVal,setAvgVal]=useState(499);
+  const leads=Math.round(budget/(c.stats.cpl||20));
+  const clients2=Math.round(leads*closeRate/100);
+  const revenue=clients2*avgVal;
+  const roi=budget>0?Math.round((revenue-budget)/budget*100):0;
+  const ranges={
+    budget:{min:500,max:10000,step:100},
+    closeRate:{min:1,max:50,step:1},
+    avgVal:{min:99,max:2999,step:50},
+  };
+  return (
+    <div>
+      <SH title="Kalkulator ROI" sub="Sprawdź ile zarobisz na kampaniach Meta Ads"/>
+      {!isPro&&<div style={{background:"#FF6B3510",border:"1px solid #FF6B3525",borderRadius:12,padding:"12px 16px",marginBottom:16,display:"flex",gap:10,alignItems:"center",flexWrap:"wrap"}}>
+        <span style={{flex:1,color:"#ccc",fontSize:12}}>⚡ Kalkulator aktywny w planie Pro — odblokuj pełne dane i prognozowanie</span>
+        <button onClick={onUpgrade} style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:8,padding:"7px 14px",fontWeight:800,cursor:"pointer",fontFamily:"inherit",fontSize:12,whiteSpace:"nowrap"}}>Odblokuj Pro →</button>
+      </div>}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}} className="chart-grid-2">
+        {/* Inputs */}
+        <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:18,padding:22}}>
+          <div style={{fontWeight:800,color:"#fff",fontSize:14,marginBottom:20}}>📊 Parametry kampanii</div>
+          {[
+            ["💰 Budżet miesięczny (zł)",budget,setBudget,ranges.budget,"#FF6B35"],
+            ["📞 Wskaźnik zamknięcia (%)",closeRate,setCloseRate,ranges.closeRate,"#4ECDC4"],
+            ["💎 Średnia wartość klienta (zł)",avgVal,setAvgVal,ranges.avgVal,"#A78BFA"],
+          ].map(([label,val,setter,r,color])=>(
+            <div key={label} style={{marginBottom:18}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+                <span style={{fontSize:11,color:"#666680"}}>{label}</span>
+                <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:14,fontWeight:900,color}}>{val.toLocaleString("pl-PL")}</span>
+              </div>
+              <div style={{position:"relative",height:6,background:"#111120",borderRadius:3}}>
+                <div style={{position:"absolute",left:0,top:0,height:"100%",width:`${(val-r.min)/(r.max-r.min)*100}%`,background:`linear-gradient(90deg,${color},${color}88)`,borderRadius:3,transition:"width .1s"}}/>
+                <input type="range" min={r.min} max={r.max} step={r.step} value={val} onChange={e=>setter(+e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
+              </div>
+            </div>
+          ))}
+          <div style={{marginTop:6,padding:"10px 14px",background:"#08080f",borderRadius:10,border:"1px solid #151520"}}>
+            <div style={{fontSize:10,color:"#555570",marginBottom:4}}>Szacowany CPL na podstawie Twoich kampanii</div>
+            <div style={{fontFamily:"'JetBrains Mono',monospace",color:"#FF6B35",fontWeight:900,fontSize:18}}>{c.stats.cpl} zł <span style={{fontSize:11,color:"#555",fontWeight:400}}>/ lead</span></div>
+          </div>
+        </div>
+        {/* Results */}
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {[
+            ["Leadów miesięcznie",leads,"#FF6B35","👥"],
+            ["Nowych klientów",clients2,"#4ECDC4","🤝"],
+            ["Przychód miesięczny",revenue.toLocaleString("pl-PL")+" zł","#34D399","💰"],
+            ["ROI kampanii",roi+"%",roi>0?"#34D399":"#FF6B35","📈"],
+          ].map(([label,val,color,icon])=>(
+            <div key={label} style={{flex:1,background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`2px solid ${color}22`,borderRadius:14,padding:"14px 18px",display:"flex",alignItems:"center",gap:12}}>
+              <span style={{fontSize:28}}>{icon}</span>
+              <div>
+                <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:22,fontWeight:900,color,lineHeight:1}}>{val}</div>
+                <div style={{fontSize:11,color:"#555570",marginTop:3}}>{label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Summary bar */}
+      <div style={{marginTop:14,background:"linear-gradient(135deg,#0a1a0d,#080e08)",border:"1px solid #4ECDC430",borderRadius:14,padding:"16px 20px",display:"flex",gap:16,alignItems:"center",flexWrap:"wrap"}}>
+        <div style={{fontSize:28}}>🎯</div>
+        <div style={{flex:1,minWidth:200}}>
+          <div style={{fontWeight:900,color:"#fff",fontSize:14}}>Przy budżecie {budget.toLocaleString("pl-PL")} zł/mies — zarabiasz {revenue.toLocaleString("pl-PL")} zł</div>
+          <div style={{color:"#555570",fontSize:12,marginTop:3}}>To {clients2} nowych klientów · ROI {roi}% · zwrot w {budget>0?Math.ceil(budget/Math.max(avgVal,1)):"-"} klientach</div>
+        </div>
+        {isPro&&<button onClick={()=>showToast("📄 Eksport kalkulacji PDF — wkrótce")} style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"10px 18px",fontWeight:800,cursor:"pointer",fontFamily:"inherit",fontSize:12,whiteSpace:"nowrap"}}>Pobierz PDF 📄</button>}
+      </div>
+    </div>
+  );
+}
+
+
 /* ─── CLIENT APP ─────────────────────────────────────────────────── */
 const CLIENT_NAV = [
-  ["overview","◈","Moje wyniki"],["campaigns","▶","Kampanie"],["leads","◎","Leady"],
+  ["overview","◈","Moje wyniki"],["roi","◆","Kalkulator ROI"],["campaigns","▶","Kampanie"],["leads","◎","Leady"],
   ["reports","▤","Raporty"],["creatives","◌","Kreacje"],["order","⊕","Zamów kampanię"],
   ["onboarding","✓","Onboarding"],["training","◧","Szkolenia"],["kb","◉","Baza wiedzy"],
   ["chat","△","Chat z agencją"],["ticket","□","Zgłoś problem"],
@@ -1494,6 +1716,7 @@ function ClientApp({user,onLogout}) {
           </div>
         )}
         {view==="overview"&&<div className="fu"><SH title="Moje wyniki"/><ClientOverview c={client} isPro={isPro} onUpgrade={()=>setShowUpgrade(true)}/></div>}
+        {view==="roi"&&<div className="fu"><ClientROI c={client} isPro={isPro} onUpgrade={()=>setShowUpgrade(true)}/></div>}
         {view==="campaigns"&&<div className="fu"><SH title="Kampanie"/><ClientCampaigns c={client} isPro={isPro} onUpgrade={()=>setShowUpgrade(true)}/></div>}
         {view==="leads"&&<div className="fu"><SH title="Leady" sub={`${client.leads.length} leadów`}/><ClientLeads c={client} isPro={isPro} onUpgrade={()=>setShowUpgrade(true)}/></div>}
         {view==="reports"&&<div className="fu"><SH title="Raporty"/><ClientReports c={client} isPro={isPro} onUpgrade={()=>setShowUpgrade(true)}/></div>}
