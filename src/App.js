@@ -178,9 +178,12 @@ function showToast(msg){if(_setToastGlobal){_setToastGlobal(msg);clearTimeout(_t
 function Toast(){const [msg,setMsg]=useState(null);useEffect(()=>{_setToastGlobal=setMsg;return()=>{_setToastGlobal=null;};},[]);if(!msg)return null;return <div style={{position:"fixed",bottom:28,left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#1a1a2e,#111120)",border:"1px solid #2a2a3e",borderRadius:14,padding:"12px 24px",color:"#fff",fontSize:13,fontWeight:700,zIndex:9999,boxShadow:"0 8px 32px rgba(0,0,0,.6)",animation:"fu .2s ease forwards",fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>{msg}</div>;}
 
 function HotTimer({m}) {
-  if(m>1440) return <span style={{color:"#666680",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{Math.floor(m/60)}h temu</span>;
-  if(m>60) return <span style={{color:"#F7C59F",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{Math.floor(m/60)}h temu</span>;
-  return <span style={{color:"#FF6B35",fontSize:11,fontWeight:800,animation:"glow 2s infinite",textShadow:"0 0 8px #FF6B3560",fontFamily:"'JetBrains Mono',monospace"}}>🔥 {m} min</span>;
+  const [tick,setTick]=useState(0);
+  useEffect(()=>{const id=setInterval(()=>setTick(t=>t+1),60000);return()=>clearInterval(id);},[]);
+  const mins=m+tick;
+  if(mins>1440) return <span style={{color:"#666680",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{Math.floor(mins/60)}h temu</span>;
+  if(mins>60) return <span style={{color:"#F7C59F",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{Math.floor(mins/60)}h temu</span>;
+  return <span style={{color:"#FF6B35",fontSize:11,fontWeight:800,animation:"glow 2s infinite",textShadow:"0 0 8px #FF6B3560",fontFamily:"'JetBrains Mono',monospace"}}>🔥 {mins} min</span>;
 }
 
 /* ─── STAT CARD ──────────────────────────────────────────────────────── */
@@ -909,7 +912,7 @@ function AdminReports({clients}) {
 function AdminChat({clients,setClients}) {
   const [active,setActive]=useState(clients[0]?.id); const [msg,setMsg]=useState(""); const br=useRef(null);
   const cl=clients.find(c=>c.id===active);
-  useEffect(()=>{br.current?.scrollIntoView({behavior:"smooth"});},[messages]);
+  useEffect(()=>{br.current?.scrollIntoView({behavior:"smooth"});},[cl?.messages]);
   const send=()=>{
     if(!msg.trim())return;
     const m={from:"admin",text:msg,time:new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"})};
@@ -1465,7 +1468,7 @@ function ClientCreatives({c,clients,setClients,isPro,onUpgrade}) {
 function ChatPane({messages,clientId,clients,setClients}) {
   const [msg,setMsg]=useState(""); const br=useRef(null);
   const live=clients.find(c=>c.id===clientId)?.messages||messages;
-  useEffect(()=>{br.current?.scrollIntoView({behavior:"smooth"});},[messages]);
+  useEffect(()=>{br.current?.scrollIntoView({behavior:"smooth"});},[live]);
   const send=()=>{
     if(!msg.trim()||!setClients)return;
     const m={from:"client",text:msg,time:new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"})};
@@ -1599,7 +1602,12 @@ function CampaignOrder() {
             <div key={k} style={{marginBottom:16}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>{l}</div><input value={form[k]} onChange={e=>set(k,e.target.value)} placeholder={ph} style={{width:"100%",background:"#08080f",border:"1px solid #151525",borderRadius:10,padding:"11px 14px",color:"#ddd",fontSize:13,outline:"none"}}/></div>
           ))}
           <div style={{marginBottom:20}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>Uwagi</div><textarea value={form.notes} onChange={e=>set("notes",e.target.value)} rows={3} style={{width:"100%",background:"#08080f",border:"1px solid #151525",borderRadius:10,padding:"11px 14px",color:"#ddd",fontSize:13,outline:"none",resize:"vertical"}}/></div>
-          <div style={{display:"flex",gap:8}}><button onClick={()=>setStep(1)} style={{flex:1,background:"#0f0f1e",border:"1px solid #1e1e2e",color:"#5a5a7a",borderRadius:10,padding:"12px 0",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>← Wróć</button><button onClick={()=>setStep(3)} style={{flex:2,background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"12px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit"}}>Wyślij 🚀</button></div>
+          <div style={{display:"flex",gap:8}}><button onClick={()=>setStep(1)} style={{flex:1,background:"#0f0f1e",border:"1px solid #1e1e2e",color:"#5a5a7a",borderRadius:10,padding:"12px 0",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>← Wróć</button><button onClick={async()=>{
+    try{
+      await fetch("https://hook.eu1.make.com/9q9jgavlv8c7cpkvr7v17o8e6fqgn9um",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"campaign_order",...form,submittedAt:new Date().toISOString()})});
+    }catch(e){}
+    setStep(3);
+  }} style={{flex:2,background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"12px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit"}}>Wyślij 🚀</button></div>
         </>}
       </div>
     </div>
@@ -1616,7 +1624,13 @@ function TicketForm() {
         <div style={{marginBottom:16}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>Temat</div><input value={title} onChange={e=>setTitle(e.target.value)} placeholder="np. Nie widzę nowych leadów" style={{width:"100%",background:"#08080f",border:"1px solid #151525",borderRadius:10,padding:"11px 14px",color:"#ddd",fontSize:13,outline:"none"}}/></div>
         <div style={{marginBottom:16}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>Priorytet</div><div style={{display:"flex",gap:6}}>{[["high","Pilne","#FF6B35"],["medium","Normalne","#F7C59F"],["low","Niskie","#444"]].map(([v,l,c])=><button key={v} onClick={()=>setPrio(v)} style={{flex:1,background:prio===v?c+"15":"#08080f",border:`1px solid ${prio===v?c+"40":"#151525"}`,color:prio===v?c:"#5a5a7a",borderRadius:8,padding:"8px 0",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>)}</div></div>
         <div style={{marginBottom:20}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>Opis</div><textarea value={desc} onChange={e=>setDesc(e.target.value)} rows={4} style={{width:"100%",background:"#08080f",border:"1px solid #151525",borderRadius:10,padding:"11px 14px",color:"#ddd",fontSize:13,outline:"none",resize:"vertical"}}/></div>
-        <button onClick={()=>{if(title.trim())setSent(true);}} style={{width:"100%",background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"12px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit",fontSize:14}}>Wyślij zgłoszenie →</button>
+        <button onClick={async()=>{
+    if(!title.trim())return;
+    try{
+      await fetch("https://hook.eu1.make.com/9q9jgavlv8c7cpkvr7v17o8e6fqgn9um",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"ticket",title,desc,priority:prio,submittedAt:new Date().toISOString()})});
+    }catch(e){}
+    setSent(true);
+  }} style={{width:"100%",background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"12px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit",fontSize:14}}>Wyślij zgłoszenie →</button>
       </div>
     </div>
   );
@@ -1634,7 +1648,7 @@ function UpgradeModal({onClose}) {
         </div>
         <div style={{display:"flex",gap:10}}>
           <button onClick={onClose} style={{flex:1,background:"#0f0f1e",border:"1px solid #1e1e2e",color:"#666680",borderRadius:12,padding:"12px 0",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Zostań Free</button>
-          <button onClick={onClose} style={{flex:2,background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:12,padding:"12px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit",fontSize:14,boxShadow:`0 4px 20px ${TENANT.primary}50`}}>Odblokuj za 99 zł/mies →</button>
+          <button onClick={()=>{window.open("https://hardgain.pl/#kontakt","_blank");onClose();}} style={{flex:2,background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:12,padding:"12px 0",fontWeight:900,cursor:"pointer",fontFamily:"inherit",fontSize:14,boxShadow:`0 4px 20px ${TENANT.primary}50`}}>Odblokuj za 99 zł/mies →</button>
         </div>
         <div style={{textAlign:"center",color:"#4a4a6a",fontSize:11,marginTop:12}}>Możesz zrezygnować w każdej chwili</div>
       </div>
