@@ -40,7 +40,19 @@ const G = () => (
       .mobile-menu-btn{display:flex!important}
       .sidebar-panel{transform:translateX(-100%);transition:transform .25s ease}
       .sidebar-panel.open{transform:translateX(0)}
-      main{padding:16px!important}
+      main{padding:16px!important;padding-top:56px!important}
+      .kpi-grid-5{grid-template-columns:repeat(2,1fr)!important}
+      .kpi-grid-4{grid-template-columns:repeat(2,1fr)!important}
+      .chart-grid-2{grid-template-columns:1fr!important}
+      .bottom-grid-3{grid-template-columns:1fr!important}
+      .camp-grid{grid-template-columns:1fr!important}
+      .client-header{flex-wrap:wrap!important;gap:10px!important}
+      .client-header-actions{margin-left:0!important;width:100%!important;justify-content:flex-start!important}
+      .tabs-scroll{overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .tabs-scroll::-webkit-scrollbar{display:none}
+      .dash-top-row{flex-direction:column!important;gap:8px!important}
+      .settings-grid-3{grid-template-columns:1fr!important}
+      .map-grid{grid-template-columns:1fr!important}
     }
     @media(max-width:1024px){
       .kpi-grid-5{grid-template-columns:repeat(3,1fr)!important}
@@ -190,9 +202,9 @@ function KPI({label,value,sub,accent="#fff",icon,trend,locked,onUpgrade}) {
 /* ─── TABS ───────────────────────────────────────────────────────────── */
 function Tabs({tabs,active,onSelect}) {
   return (
-    <div style={{display:"flex",gap:2,background:"#0a0a12",border:"1px solid #151520",borderRadius:14,padding:3,flexWrap:"wrap",marginBottom:22}}>
+    <div className="tabs-scroll" style={{display:"flex",gap:2,background:"#0a0a12",border:"1px solid #151520",borderRadius:14,padding:3,flexWrap:"wrap",marginBottom:22}}>
       {tabs.map(([k,l,ic])=>(
-        <button key={k} onClick={()=>onSelect(k)} style={{background:active===k?"#161625":"none",border:"none",color:active===k?"#fff":"#383848",borderRadius:10,padding:"7px 14px",fontSize:12,fontWeight:active===k?700:400,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",transition:"all .12s",display:"flex",alignItems:"center",gap:5}}>
+        <button key={k} onClick={()=>onSelect(k)} style={{background:active===k?"#161625":"transparent",border:"none",color:active===k?"#fff":"#555570",borderRadius:10,padding:"7px 14px",fontSize:12,fontWeight:active===k?700:400,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",transition:"all .12s",display:"flex",alignItems:"center",gap:5}}>
           {ic&&<span style={{opacity:.7}}>{ic}</span>}{l}
         </button>
       ))}
@@ -202,9 +214,9 @@ function Tabs({tabs,active,onSelect}) {
 
 /* ─── SECTION HEADER ─────────────────────────────────────────────────── */
 const SH = ({title,sub,btn,onBtn,badge}) => (
-  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:22}}>
+  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:22,flexWrap:"wrap",gap:10}}>
     <div>
-      <h2 style={{fontSize:21,fontWeight:900,color:"#fff",letterSpacing:"-0.03em",display:"flex",alignItems:"center",gap:10}}>
+      <h2 style={{fontSize:21,fontWeight:900,color:"#fff",letterSpacing:"-0.03em",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
         {title}
         {badge&&<span style={{background:"#FF6B3520",color:"#FF6B35",border:"1px solid #FF6B3530",borderRadius:8,padding:"2px 10px",fontSize:11,fontWeight:800}}>{badge}</span>}
       </h2>
@@ -380,7 +392,7 @@ function AdminDash({clients,events,onOpen}) {
 
   return (
     <div style={{padding:28}} className="fu">
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:26}}>
+      <div className="dash-top-row" style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:26}}>
         <div>
           <h1 style={{fontSize:24,fontWeight:900,color:"#fff",letterSpacing:"-0.03em"}}>Dashboard</h1>
           <p style={{color:"#555570",fontSize:12,marginTop:3}}>Marzec 2026 · {clients.length} klientów · {clients.filter(c=>c.status==="active").length} aktywnych</p>
@@ -713,8 +725,8 @@ function AdminCalendar({clients,events,setEvents}) {
 
       {/* Add event modal */}
       {showAdd&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(6px)"}} onClick={()=>setShowAdd(false)}>
-          <div style={{background:"#0d0d18",border:"1px solid #1e1e2e",borderRadius:20,width:"100%",maxWidth:420,padding:28}} onClick={e=>e.stopPropagation()}>
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(6px)",overflowY:"auto"}} onClick={()=>setShowAdd(false)}>
+          <div style={{background:"#0d0d18",border:"1px solid #1e1e2e",borderRadius:20,width:"100%",maxWidth:420,padding:28,maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
             <div style={{fontWeight:900,color:"#fff",fontSize:18,marginBottom:20}}>Nowe spotkanie</div>
             {[
               ["Klient","select",["clientId",[["","— wybierz —"],...clients.map(c=>[c.id,c.name])]]],
@@ -842,7 +854,7 @@ function AdminLeadsAll({clients}) {
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:6}}>
         {filtered.map(l=>(
-          <div key={l.id} className="hr" style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${l.hot<=60?"#FF6B3520":"#151520"}`,borderRadius:12,padding:"11px 16px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",transition:"background .1s"}}>
+          <div key={l.id} className="hr" style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${l.hot<=60?"#FF6B3520":"#151520"}`,borderRadius:12,padding:"11px 16px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",transition:"background .1s",flexWrap:"wrap"}}>
             <div style={{width:32,height:32,background:"#FF6B3515",borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",color:"#FF6B35",fontWeight:900,fontSize:12,flexShrink:0}}>{l.name.charAt(0)}</div>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontWeight:700,color:"#e0e0e8",fontSize:13}}>{l.name}</div>
@@ -905,7 +917,7 @@ function AdminChat({clients,setClients}) {
     setMsg("");
   };
   return (
-    <div style={{display:"flex",height:"calc(100vh - 0px)"}} className="fu">
+    <div style={{display:"flex",height:"100vh",maxHeight:"100vh"}} className="fu">
       <div style={{width:220,borderRight:"1px solid #151525",display:"flex",flexDirection:"column",background:"#08080f"}}>
         <div style={{padding:"16px 14px",borderBottom:"1px solid #151525"}}><div style={{fontWeight:800,color:"#fff",fontSize:13}}>Wiadomości</div></div>
         {clients.map(c=>(
@@ -929,7 +941,7 @@ function AdminChat({clients,setClients}) {
               <div key={i} style={{display:"flex",justifyContent:m.from==="admin"?"flex-end":"flex-start",marginBottom:9}}>
                 <div style={{maxWidth:"68%",background:m.from==="admin"?`linear-gradient(135deg,${TENANT.primary},#e05020)`:"#111120",borderRadius:m.from==="admin"?"14px 14px 3px 14px":"14px 14px 14px 3px",padding:"10px 14px",boxShadow:m.from==="admin"?`0 4px 14px ${TENANT.primary}25`:"none"}}>
                   <div style={{color:"#fff",fontSize:13}}>{m.text}</div>
-                  <div style={{color:m.from==="admin"?"rgba(255,255,255,.4)":"#1e1e2e",fontSize:9,marginTop:3,textAlign:"right"}}>{m.time}</div>
+                  <div style={{color:m.from==="admin"?"rgba(255,255,255,.4)":"#555570",fontSize:9,marginTop:3,textAlign:"right"}}>{m.time}</div>
                 </div>
               </div>
             ))}
@@ -1081,7 +1093,7 @@ function AdminSettings() {
         </div>
       )}
       {tab==="plans"&&(
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,maxWidth:740}}>
+        <div className="settings-grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,maxWidth:740}}>
           {[{name:"Starter",price:199,clients:10,features:["Panel klienta","Leady CRM","Raporty podstawowe","Chat"]},{name:"Agency",price:499,clients:50,features:["Wszystko z Starter","White-label","Własna domena","Mapa Polski","Kalendarz","Export CSV"],highlight:true},{name:"Scale",price:999,clients:"∞",features:["Wszystko z Agency","API access","Multi-user team","AI Asystent","SMS powiadomienia","Priorytetowy support"]}].map(p=>(
             <div key={p.name} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`2px solid ${p.highlight?"#FF6B3540":"#151520"}`,borderRadius:18,padding:22,position:"relative"}}>
               {p.highlight&&<div style={{position:"absolute",top:-1,left:"50%",transform:"translateX(-50%)",background:`linear-gradient(90deg,${TENANT.primary},#e05020)`,color:"#fff",borderRadius:"0 0 8px 8px",padding:"2px 12px",fontSize:10,fontWeight:900,whiteSpace:"nowrap"}}>NAJPOPULARNIEJSZY</div>}
@@ -1129,13 +1141,13 @@ function AdminClientFocus({client,clients,setClients,events,setEvents,onBack}) {
   return (
     <div style={{padding:28}} className="fu">
       <button onClick={onBack} style={{background:"none",border:"none",color:"#555570",cursor:"pointer",fontFamily:"inherit",fontSize:12,marginBottom:18,padding:0}}>← Wróć do klientów</button>
-      <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:24}}>
+      <div className="client-header" style={{display:"flex",alignItems:"center",gap:14,marginBottom:24,flexWrap:"wrap"}}>
         <div style={{width:52,height:52,background:live.color+"15",border:`1px solid ${live.color}25`,borderRadius:16,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:live.color,fontSize:22,flexShrink:0}}>{live.avatar}</div>
-        <div>
-          <h1 style={{fontSize:22,fontWeight:900,color:"#fff",letterSpacing:"-0.03em"}}>{live.name}</h1>
+        <div style={{flex:"1 1 200px",minWidth:0}}>
+          <h1 style={{fontSize:22,fontWeight:900,color:"#fff",letterSpacing:"-0.03em",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{live.name}</h1>
           <div style={{color:"#555570",fontSize:12,marginTop:2}}>{live.city} · {live.plan} · {fmt(live.planPrice)} zł/mies</div>
         </div>
-        <div style={{marginLeft:"auto",display:"flex",gap:8,alignItems:"center"}}>
+        <div className="client-header-actions" style={{marginLeft:"auto",display:"flex",gap:8,alignItems:"center",flexShrink:0}}>
           <span style={{background:live.plan_key==="pro"?"#FF6B3518":"#141420",color:live.plan_key==="pro"?"#FF6B35":"#5a5a7a",border:`1px solid ${live.plan_key==="pro"?"#FF6B3530":"#1e1e2e"}`,borderRadius:8,padding:"5px 14px",fontSize:12,fontWeight:800}}>{live.plan_key==="pro"?"✓ PRO":"FREE"}</span>
           <button onClick={()=>showToast("✏️ Edycja klienta — wkrótce dostępna")} style={{background:"#0d0d18",border:"1px solid #151520",color:"#666",borderRadius:9,padding:"7px 14px",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>Edytuj klienta</button>
         </div>
@@ -1252,20 +1264,20 @@ function AdminClientFocus({client,clients,setClients,events,setEvents,onBack}) {
       )}
 
       {tab==="messages"&&(
-        <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:16,overflow:"hidden",height:400,display:"flex",flexDirection:"column"}}>
+        <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:16,overflow:"hidden",minHeight:300,maxHeight:"60vh",display:"flex",flexDirection:"column"}}>
           <div style={{flex:1,overflow:"auto",padding:"14px 16px 8px"}}>
             {live.messages.length===0?<div style={{color:"#4a4a6a",textAlign:"center",marginTop:40}}>Brak wiadomości</div>:
             live.messages.map((m,i)=>(
               <div key={i} style={{display:"flex",justifyContent:m.from==="admin"?"flex-end":"flex-start",marginBottom:9}}>
                 <div style={{maxWidth:"68%",background:m.from==="admin"?`linear-gradient(135deg,${TENANT.primary},#e05020)`:"#111120",borderRadius:m.from==="admin"?"14px 14px 3px 14px":"14px 14px 14px 3px",padding:"10px 14px"}}>
                   <div style={{color:"#fff",fontSize:13}}>{m.text}</div>
-                  <div style={{color:m.from==="admin"?"rgba(255,255,255,.35)":"#1e1e2e",fontSize:9,marginTop:3,textAlign:"right"}}>{m.time}</div>
+                  <div style={{color:m.from==="admin"?"rgba(255,255,255,.35)":"#555570",fontSize:9,marginTop:3,textAlign:"right"}}>{m.time}</div>
                 </div>
               </div>
             ))}
           </div>
           <div style={{padding:"9px 12px",borderTop:"1px solid #151525",display:"flex",gap:8}}>
-            <span style={{color:"#555570",fontSize:12,padding:"8px 0"}}>Otwórz czat →</span>
+            <button onClick={()=>showToast("💬 Pełny czat dostępny w zakładce Chat w menu")} style={{color:"#FF6B35",fontSize:12,padding:"8px 0",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Otwórz czat →</button>
           </div>
         </div>
       )}
@@ -1323,7 +1335,7 @@ function ClientApp({user,onLogout}) {
       <Sidebar nav={CLIENT_NAV} view={view} setView={setView} onLogout={onLogout} u={{name:client.name,avatar:client.avatar,role:"client"}} />
       <main style={{marginLeft:"var(--sidebar-ml,220px)",flex:1,overflow:"auto",padding:28}}>
         {!isPro&&view!=="onboarding"&&view!=="training"&&view!=="kb"&&view!=="ticket"&&view!=="order"&&(
-          <div style={{background:"linear-gradient(135deg,#FF6B3510,#A78BFA10)",border:"1px solid #FF6B3525",borderRadius:14,padding:"16px 20px",marginBottom:22,display:"flex",alignItems:"center",gap:14}}>
+          <div style={{background:"linear-gradient(135deg,#FF6B3510,#A78BFA10)",border:"1px solid #FF6B3525",borderRadius:14,padding:"16px 20px",marginBottom:22,display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
             <span style={{fontSize:24}}>⚡</span>
             <div style={{flex:1}}><div style={{fontWeight:800,color:"#fff",fontSize:13}}>Jesteś na planie Free</div><div style={{color:"#666680",fontSize:12,marginTop:2}}>Odblokuj pełne dane, wykresy, chat i raporty za 99 zł/mies</div></div>
             <button onClick={()=>setShowUpgrade(true)} style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:10,padding:"9px 18px",fontWeight:800,cursor:"pointer",fontFamily:"inherit",fontSize:12,whiteSpace:"nowrap",boxShadow:`0 4px 16px ${TENANT.primary}30`}}>Odblokuj Pro →</button>
@@ -1467,7 +1479,7 @@ function ChatPane({messages,clientId,clients,setClients}) {
           <div key={i} style={{display:"flex",justifyContent:mine?"flex-end":"flex-start",marginBottom:9}}>
             <div style={{maxWidth:"70%",background:mine?`linear-gradient(135deg,${TENANT.primary},#e05020)`:"#111120",borderRadius:mine?"14px 14px 3px 14px":"14px 14px 14px 3px",padding:"10px 14px"}}>
               <div style={{color:"#fff",fontSize:13}}>{m.text}</div>
-              <div style={{color:mine?"rgba(255,255,255,.35)":"#1e1e2e",fontSize:9,marginTop:3,textAlign:"right"}}>{m.time}</div>
+              <div style={{color:mine?"rgba(255,255,255,.35)":"#555570",fontSize:9,marginTop:3,textAlign:"right"}}>{m.time}</div>
             </div>
           </div>
         );})}
@@ -1497,7 +1509,7 @@ function ClientOnboarding() {
       </div>
       {steps.map((s,i)=>(
         <div key={s.id} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${s.done?"#4ECDC420":"#151520"}`,borderRadius:14,padding:"14px 18px",display:"flex",gap:14,alignItems:"flex-start",marginBottom:8,opacity:s.done?.6:1,transition:"opacity .2s"}}>
-          <div onClick={()=>setSteps(p=>p.map(st=>st.id===s.id?{...st,done:!st.done}:st))} style={{width:22,height:22,borderRadius:6,border:`2px solid ${s.done?"#4ECDC4":"#1e1e2e"}`,background:s.done?"#4ECDC420":"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>
+          <div onClick={()=>setSteps(p=>p.map(st=>st.id===s.id?{...st,done:!st.done}:st))} style={{width:28,height:28,borderRadius:8,border:`2px solid ${s.done?"#4ECDC4":"#1e1e2e"}`,background:s.done?"#4ECDC420":"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>
             {s.done&&<span style={{color:"#4ECDC4",fontSize:11}}>✓</span>}
           </div>
           <div><div style={{fontWeight:700,color:s.done?"#333":"#e0e0e8",fontSize:14,textDecoration:s.done?"line-through":"none"}}>Krok {i+1}: {s.title}</div><div style={{color:"#555570",fontSize:12,marginTop:3}}>{s.desc}</div></div>
@@ -1612,8 +1624,8 @@ function TicketForm() {
 
 function UpgradeModal({onClose}) {
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.8)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(6px)"}} onClick={onClose}>
-      <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #1e1e2e",borderRadius:22,width:"100%",maxWidth:480,padding:32,boxShadow:`0 24px 80px #000`}} onClick={e=>e.stopPropagation()}>
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.8)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(6px)",overflowY:"auto"}} onClick={onClose}>
+      <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #1e1e2e",borderRadius:22,width:"100%",maxWidth:480,padding:32,boxShadow:`0 24px 80px #000`,maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
         <div style={{textAlign:"center",marginBottom:26}}><div style={{fontSize:42,marginBottom:12}}>⚡</div><div style={{fontSize:24,fontWeight:900,color:"#fff",letterSpacing:"-0.02em"}}>Odblokuj Hardgain Pro</div><div style={{color:"#666680",fontSize:13,marginTop:5}}>Pełny dostęp do wszystkich funkcji</div></div>
         <div style={{marginBottom:24}}>
           {["✓ Pełne dane leadów — imię, telefon, status","✓ Wykresy CPL i trendów w czasie","✓ Raporty miesięczne z historią","✓ Zatwierdzanie kreacji reklamowych","✓ Chat z agencją bez limitu","✓ Eksport leadów do CSV","✓ Zamówienia nowych kampanii","✓ Powiadomienia push przy nowym leadzie"].map(f=>(
