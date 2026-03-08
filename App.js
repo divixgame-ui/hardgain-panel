@@ -416,9 +416,9 @@ function AdminDash({clients,events,onOpen}) {
                 <linearGradient id="lG" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#FF6B35" stopOpacity={0.2}/><stop offset="95%" stopColor="#FF6B35" stopOpacity={0}/></linearGradient>
                 <linearGradient id="cG" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#4ECDC4" stopOpacity={0.2}/><stop offset="95%" stopColor="#4ECDC4" stopOpacity={0}/></linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#0f0f18"/>
-              <XAxis dataKey="day" tick={{fill:"#252535",fontSize:11}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fill:"#252535",fontSize:10}} axisLine={false} tickLine={false} width={28}/>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2e"/>
+              <XAxis dataKey="day" tick={{fill:"#666680",fontSize:11}} axisLine={false} tickLine={false}/>
+              <YAxis tick={{fill:"#666680",fontSize:10}} axisLine={false} tickLine={false} width={28}/>
               <Tooltip contentStyle={{background:"#0f0f1e",border:"1px solid #1e1e2e",borderRadius:10,color:"#fff",fontSize:12}}/>
               <Area type="monotone" dataKey="leads" stroke="#FF6B35" strokeWidth={2} fill="url(#lG)" dot={{fill:"#FF6B35",r:3}}/>
               <Area type="monotone" dataKey="cpl" stroke="#4ECDC4" strokeWidth={2} fill="url(#cG)" dot={{fill:"#4ECDC4",r:3}}/>
@@ -431,9 +431,9 @@ function AdminDash({clients,events,onOpen}) {
           <div style={{fontWeight:700,color:"#fff",fontSize:13,marginBottom:16}}>Trend miesięczny</div>
           <ResponsiveContainer width="100%" height={150}>
             <BarChart data={monthData} barSize={18}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#0f0f18"/>
-              <XAxis dataKey="m" tick={{fill:"#252535",fontSize:11}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fill:"#252535",fontSize:10}} axisLine={false} tickLine={false} width={28}/>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2e"/>
+              <XAxis dataKey="m" tick={{fill:"#666680",fontSize:11}} axisLine={false} tickLine={false}/>
+              <YAxis tick={{fill:"#666680",fontSize:10}} axisLine={false} tickLine={false} width={28}/>
               <Tooltip contentStyle={{background:"#0f0f1e",border:"1px solid #1e1e2e",borderRadius:10,color:"#fff",fontSize:12}}/>
               <Bar dataKey="leads" fill="#FF6B35" radius={[4,4,0,0]}/>
             </BarChart>
@@ -560,7 +560,7 @@ function AdminMap({clients}) {
               );
             })}
             {/* Legend label */}
-            <text x={55} y={360} fontSize={8} fill="#252535">Kliknij region → szczegóły</text>
+            <text x={55} y={360} fontSize={8} fill="#555570">Kliknij region → szczegóły</text>
           </svg>
 
           {/* Hover tooltip */}
@@ -881,7 +881,7 @@ function AdminReports({clients}) {
             </div>
             <ResponsiveContainer width="100%" height={80}>
               <BarChart data={mData} barSize={16}>
-                <XAxis dataKey="m" tick={{fill:"#252535",fontSize:10}} axisLine={false} tickLine={false}/>
+                <XAxis dataKey="m" tick={{fill:"#666680",fontSize:10}} axisLine={false} tickLine={false}/>
                 <Tooltip contentStyle={{background:"#0f0f1e",border:"1px solid #1e1e2e",borderRadius:8,color:"#fff",fontSize:11}}/>
                 <Bar dataKey="leads" fill={c.color} radius={[3,3,0,0]}/>
               </BarChart>
@@ -1158,8 +1158,8 @@ function AdminClientFocus({client,clients,setClients,events,setEvents,onBack}) {
               <ResponsiveContainer width="100%" height={130}>
                 <AreaChart data={["Pon","Wt","Śr","Czw","Pt","Sob","Nd"].map((d,i)=>({day:d,leads:live.weekLeads[i]||0,cpl:live.weekCpl[i]||0}))}>
                   <defs><linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={live.color} stopOpacity={0.25}/><stop offset="95%" stopColor={live.color} stopOpacity={0}/></linearGradient></defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#0f0f18"/>
-                  <XAxis dataKey="day" tick={{fill:"#252535",fontSize:10}} axisLine={false} tickLine={false}/>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2e"/>
+                  <XAxis dataKey="day" tick={{fill:"#666680",fontSize:10}} axisLine={false} tickLine={false}/>
                   <Tooltip contentStyle={{background:"#0f0f1e",border:"1px solid #1e1e2e",borderRadius:8,color:"#fff",fontSize:11}}/>
                   <Area type="monotone" dataKey="leads" stroke={live.color} strokeWidth={2} fill="url(#lg2)" dot={{fill:live.color,r:3}}/>
                 </AreaChart>
@@ -1169,8 +1169,8 @@ function AdminClientFocus({client,clients,setClients,events,setEvents,onBack}) {
               <div style={{fontWeight:700,color:"#fff",fontSize:13,marginBottom:14}}>CPL trend</div>
               <ResponsiveContainer width="100%" height={130}>
                 <LineChart data={["Pon","Wt","Śr","Czw","Pt","Sob","Nd"].map((d,i)=>({day:d,cpl:live.weekCpl[i]||0}))}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#0f0f18"/>
-                  <XAxis dataKey="day" tick={{fill:"#252535",fontSize:10}} axisLine={false} tickLine={false}/>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2e"/>
+                  <XAxis dataKey="day" tick={{fill:"#666680",fontSize:10}} axisLine={false} tickLine={false}/>
                   <Tooltip contentStyle={{background:"#0f0f1e",border:"1px solid #1e1e2e",borderRadius:8,color:"#fff",fontSize:11}}/>
                   <Line type="monotone" dataKey="cpl" stroke="#4ECDC4" strokeWidth={2} dot={{fill:"#4ECDC4",r:3}}/>
                 </LineChart>
@@ -1372,8 +1372,8 @@ function ClientOverview({c,isPro,onUpgrade}) {
         <ResponsiveContainer width="100%" height={130}>
           <AreaChart data={["Pon","Wt","Śr","Czw","Pt","Sob","Nd"].map((d,i)=>({day:d,leads:c.weekLeads[i]||0}))}>
             <defs><linearGradient id="clg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={c.color} stopOpacity={0.3}/><stop offset="95%" stopColor={c.color} stopOpacity={0}/></linearGradient></defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#0f0f18"/>
-            <XAxis dataKey="day" tick={{fill:"#252535",fontSize:10}} axisLine={false} tickLine={false}/>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2e"/>
+            <XAxis dataKey="day" tick={{fill:"#666680",fontSize:10}} axisLine={false} tickLine={false}/>
             <Tooltip contentStyle={{background:"#0f0f1e",border:"1px solid #1e1e2e",borderRadius:8,color:"#fff",fontSize:11}}/>
             <Area type="monotone" dataKey="leads" stroke={c.color} strokeWidth={2} fill="url(#clg)" dot={{fill:c.color,r:3}}/>
           </AreaChart>
