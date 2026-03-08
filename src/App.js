@@ -42,7 +42,9 @@ const G = () => (
       .sidebar-panel.open{transform:translateX(0)}
       main{padding:12px!important;padding-top:60px!important}
       .kpi-grid-5{grid-template-columns:repeat(2,1fr)!important}
+      .kpi-grid-5>:last-child:nth-child(odd){grid-column:span 2!important}
       .kpi-grid-4{grid-template-columns:repeat(2,1fr)!important}
+      .kpi-val{font-size:clamp(16px,4.5vw,28px)!important;word-break:break-all!important}
       .chart-grid-2{grid-template-columns:1fr!important}
       .bottom-grid-3{grid-template-columns:1fr!important}
       .camp-grid{grid-template-columns:1fr!important}
@@ -59,7 +61,8 @@ const G = () => (
       .cal-cell{min-height:60px!important;padding:3px!important}
       .cal-day-header{font-size:9px!important;padding:6px 4px!important}
       .chat-layout{flex-direction:column!important;height:auto!important;max-height:none!important}
-      .chat-sidebar{width:100%!important;height:auto!important;max-height:180px!important;border-right:none!important;border-bottom:1px solid #151525!important}
+      .chat-sidebar{width:100%!important;height:auto!important;max-height:160px!important;overflow-y:auto!important;border-right:none!important;border-bottom:1px solid #151525!important}
+      .chat-client-header{display:none!important}
       .chat-main{min-height:400px!important}
       .ticket-row{flex-wrap:wrap!important;gap:8px!important}
       .quick-contact{grid-template-columns:1fr 1fr!important}
@@ -71,6 +74,7 @@ const G = () => (
     @media(max-width:1024px){
       .kpi-grid-5{grid-template-columns:repeat(3,1fr)!important}
       .kpi-grid-4{grid-template-columns:repeat(2,1fr)!important}
+      .kpi-val{font-size:clamp(16px,4.5vw,28px)!important;word-break:break-all!important}
       .chart-grid-2{grid-template-columns:1fr!important}
       .bottom-grid-3{grid-template-columns:1fr!important}
       .camp-grid{grid-template-columns:1fr!important}
@@ -206,7 +210,7 @@ function KPI({label,value,sub,accent="#fff",icon,trend,locked,onUpgrade}) {
     <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #1a1a2e",borderRadius:16,padding:"18px 20px",position:"relative",overflow:"hidden"}}>
       {locked&&<div style={{position:"absolute",inset:0,backdropFilter:"blur(4px)",background:"#06060870",zIndex:5,display:"flex",alignItems:"center",justifyContent:"center",borderRadius:16,cursor:"pointer"}} onClick={onUpgrade}><span style={{background:"#0f0f1e",border:"1px solid #2a2a3e",borderRadius:10,padding:"8px 14px",fontSize:11,color:"#888",fontWeight:700}}>🔒 Pro</span></div>}
       <div style={{position:"absolute",top:12,right:14,fontSize:22,opacity:.15}}>{icon}</div>
-      <div style={{fontSize:26,fontWeight:900,color:accent,fontFamily:"'JetBrains Mono',monospace",lineHeight:1,marginBottom:6}}>{value}</div>
+      <div className="kpi-val" style={{fontSize:26,fontWeight:900,color:accent,fontFamily:"'JetBrains Mono',monospace",lineHeight:1,marginBottom:6,overflow:"hidden",textOverflow:"ellipsis"}}>{value}</div>
       <div style={{fontSize:11,color:"#555",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.08em"}}>{label}</div>
       {(sub||trend)&&<div style={{display:"flex",alignItems:"center",gap:6,marginTop:6}}>
         {trend&&<span style={{fontSize:10,fontWeight:700,color:trend>0?"#4ECDC4":"#FF6B35"}}>{trend>0?"▲":"▼"} {Math.abs(trend)}%</span>}
@@ -428,15 +432,13 @@ function AdminDash({clients,events,onOpen}) {
         </div>
       </div>
 
-      {/* ── ALERT BAR jeśli są gorące leady ── */}
+      {/* ── ALERT BAR ── */}
       {hotLeads.length>0&&(
-        <div style={{background:"linear-gradient(135deg,#FF6B3510,#FF6B3505)",border:"1px solid #FF6B3525",borderRadius:12,padding:"10px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-          <span style={{fontSize:18}}>🚨</span>
-          <div style={{flex:1,minWidth:0}}>
-            <span style={{fontWeight:800,color:"#FF6B35",fontSize:13}}>Pilny kontakt: </span>
-            <span style={{color:"#ccc",fontSize:12}}>{hotLeads.slice(0,2).map(l=>l.name).join(", ")}{hotLeads.length>2?` +${hotLeads.length-2} więcej`:""}</span>
-          </div>
-          <span style={{color:"#FF6B35",fontSize:11,fontWeight:700,flexShrink:0}}>Odpowiedz w &lt;60 min = 3× wyższa konwersja</span>
+        <div style={{background:"#FF6B3510",border:"1px solid #FF6B3528",borderRadius:10,padding:"9px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:8,overflow:"hidden"}}>
+          <span style={{fontSize:14,flexShrink:0}}>🔥</span>
+          <span style={{fontWeight:800,color:"#FF6B35",fontSize:12,flexShrink:0}}>Pilny kontakt:</span>
+          <span style={{color:"#ccc",fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>{hotLeads.slice(0,3).map(l=>l.name.split(" ")[0]).join(", ")}{hotLeads.length>3?` +${hotLeads.length-3}`:""}</span>
+          <span style={{color:"#FF6B35",fontSize:10,fontWeight:700,flexShrink:0,whiteSpace:"nowrap"}}>{"<"}60 min!</span>
         </div>
       )}
 
@@ -1014,7 +1016,7 @@ function AdminChat({clients,setClients}) {
       </div>
       <div className="chat-main" style={{flex:1,display:"flex",flexDirection:"column",background:"#060608",minWidth:0}}>
         {cl&&<>
-          <div style={{padding:"13px 18px",borderBottom:"1px solid #151525",display:"flex",alignItems:"center",gap:9,background:"#08080f"}}>
+          <div className="chat-client-header" style={{padding:"13px 18px",borderBottom:"1px solid #151525",display:"flex",alignItems:"center",gap:9,background:"#08080f"}}>
             <div style={{width:28,height:28,background:cl.color+"15",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:cl.color,fontSize:11,flexShrink:0}}>{cl.avatar}</div>
             <span style={{fontWeight:800,color:"#fff",fontSize:13}}>{cl.name}</span>
           </div>
@@ -1564,22 +1566,54 @@ function ClientCampaigns({c,isPro,onUpgrade}) {
 }
 
 function ClientLeads({c,isPro,onUpgrade}) {
+  const [expanded,setExpanded]=useState(null);
   return (
     <div>
-      {!isPro&&<div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:12,padding:"14px 18px",marginBottom:12,display:"flex",gap:12,alignItems:"center"}}>
-        <span style={{fontSize:28}}>👥</span><div style={{flex:1}}><div style={{fontWeight:700,color:"#fff"}}>{c.leads.length} leadów</div><div style={{color:"#666680",fontSize:12,marginTop:1}}>Odblokuj Pro aby zobaczyć dane kontaktowe</div></div>
-        <button onClick={onUpgrade} style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:9,padding:"8px 15px",fontWeight:800,cursor:"pointer",fontFamily:"inherit",fontSize:12}}>Odblokuj →</button>
+      {!isPro&&<div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #FF6B3520",borderRadius:12,padding:"14px 18px",marginBottom:14,display:"flex",gap:12,alignItems:"center",flexWrap:"wrap"}}>
+        <span style={{fontSize:28}}>👥</span>
+        <div style={{flex:1,minWidth:120}}><div style={{fontWeight:700,color:"#fff",fontSize:13}}>{c.leads.length} leadów w tym miesiącu</div><div style={{color:"#666680",fontSize:12,marginTop:2}}>Odblokuj Pro aby zobaczyć dane kontaktowe, kampanię i odpowiedzi</div></div>
+        <button onClick={onUpgrade} style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,border:"none",color:"#fff",borderRadius:9,padding:"8px 15px",fontWeight:800,cursor:"pointer",fontFamily:"inherit",fontSize:12,whiteSpace:"nowrap"}}>Odblokuj →</button>
       </div>}
-      {c.leads.map((l,i)=>(
-        <div key={l.id} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:12,padding:"12px 16px",display:"flex",alignItems:"center",gap:12,marginBottom:6,position:"relative",overflow:"hidden"}}>
-          {!isPro&&i>0&&<div style={{position:"absolute",inset:0,backdropFilter:"blur(4px)",background:"#06060880",zIndex:2,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"#555570",fontSize:12}}>🔒 Pro</span></div>}
-          <div style={{width:32,height:32,background:"#FF6B3512",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",color:"#FF6B35",fontWeight:900,fontSize:12,flexShrink:0}}>{l.name.charAt(0)}</div>
-          <div style={{flex:1,minWidth:0}}><div style={{fontWeight:700,color:"#e0e0e8",fontSize:13}}>{!isPro&&i>0?"● ● ● ● ●":l.name}</div><div style={{color:"#555570",fontSize:11}}>{!isPro&&i>0?"●●●-●●●-●●●":l.phone}</div></div>
-          <HotTimer m={l.hot}/>
-          <LBadge s={l.status}/>
-          {isPro&&<a href={`tel:${l.phone}`} style={{background:"#FF6B3512",border:"1px solid #FF6B3525",color:"#FF6B35",borderRadius:7,padding:"5px 10px",fontSize:11,fontWeight:700,textDecoration:"none",flexShrink:0}}>📞</a>}
-        </div>
-      ))}
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {c.leads.map((l,i)=>{
+        const locked=!isPro&&i>0;
+        return(
+          <div key={l.id} style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:`1px solid ${l.hot<=60&&!locked?"#FF6B3530":"#151520"}`,borderRadius:14,overflow:"hidden",position:"relative"}}>
+            {locked&&<div style={{position:"absolute",inset:0,backdropFilter:"blur(4px)",background:"#06060880",zIndex:2,display:"flex",alignItems:"center",justifyContent:"center",borderRadius:14}}><span style={{color:"#555570",fontSize:12}}>🔒 Pro</span></div>}
+            <div onClick={()=>!locked&&setExpanded(expanded===l.id?null:l.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:10,cursor:locked?"default":"pointer"}}>
+              <div style={{width:34,height:34,background:l.hot<=60?"#FF6B3520":"#1a1a2a",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",color:l.hot<=60?"#FF6B35":"#666",fontWeight:900,fontSize:13,flexShrink:0}}>{locked?"?":l.name.charAt(0)}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:800,color:"#e0e0e8",fontSize:13}}>{locked?"● ● ● ● ●":l.name}</div>
+                <div style={{color:"#555570",fontSize:11,marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                  {locked?"●●●-●●●-●●●":l.phone}
+                  {!locked&&l.campaign&&<span style={{color:"#444466",marginLeft:6}}>· {l.campaign}</span>}
+                </div>
+              </div>
+              <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>
+                <HotTimer m={l.hot}/>
+                <LBadge s={l.status}/>
+                {isPro&&<a href={`tel:${l.phone.replace(/\s/g,"")}`} onClick={e=>e.stopPropagation()} style={{background:"#FF6B3515",border:"1px solid #FF6B3530",color:"#FF6B35",borderRadius:7,padding:"5px 8px",fontSize:11,fontWeight:700,textDecoration:"none"}}>📞</a>}
+                {!locked&&<span style={{color:"#555",fontSize:10}}>{expanded===l.id?"▲":"▼"}</span>}
+              </div>
+            </div>
+            {expanded===l.id&&!locked&&l.answers&&(
+              <div style={{padding:"10px 14px 14px",borderTop:"1px solid #111120",background:"#07070e"}}>
+                <div style={{fontSize:10,fontWeight:700,color:"#444466",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8}}>Odpowiedzi z formularza</div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}} className="lead-detail-grid">
+                  {[["🎯 Cel",l.answers.cel],["⏰ Start",l.answers.start],["💰 Budżet",l.answers.budzet]].map(([label,val])=>val&&(
+                    <div key={label} style={{background:"#0d0d18",borderRadius:8,padding:"8px 10px",border:"1px solid #1a1a2a"}}>
+                      <div style={{fontSize:10,color:"#555570",marginBottom:3}}>{label}</div>
+                      <div style={{fontSize:12,color:"#ddd",fontWeight:600}}>{val}</div>
+                    </div>
+                  ))}
+                </div>
+                {l.adSet&&<div style={{marginTop:8,fontSize:11,color:"#555570"}}>📍 Zestaw reklam: <span style={{color:"#888"}}>{l.adSet}</span></div>}
+              </div>
+            )}
+          </div>
+        );
+      })}
+      </div>
     </div>
   );
 }
@@ -1767,6 +1801,16 @@ function TicketForm() {
   return (
     <div>
       <SH title="Zgłoś problem"/>
+      {/* Szybki kontakt gdy pilne */}
+      <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #FF6B3520",borderRadius:14,padding:"14px 18px",marginBottom:20}}>
+        <div style={{fontWeight:800,color:"#fff",fontSize:13,marginBottom:4}}>⚡ Pilne? Zadzwoń lub napisz od razu</div>
+        <div style={{color:"#666680",fontSize:12,marginBottom:12}}>Nie czekaj na odpowiedź — nasz agent odpowiada błyskawicznie</div>
+        <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+          <a href="tel:+48600000000" style={{background:`linear-gradient(135deg,${TENANT.primary},#e05020)`,color:"#fff",borderRadius:10,padding:"10px 20px",fontSize:13,fontWeight:800,textDecoration:"none",display:"flex",alignItems:"center",gap:6}}>📞 Zadzwoń</a>
+          <a href="https://wa.me/48600000000" target="_blank" rel="noreferrer" style={{background:"#25D36618",border:"1px solid #25D36630",color:"#25D366",borderRadius:10,padding:"10px 20px",fontSize:13,fontWeight:800,textDecoration:"none",display:"flex",alignItems:"center",gap:6}}>💬 WhatsApp</a>
+          <a href="sms:+48600000000" style={{background:"#4ECDC415",border:"1px solid #4ECDC430",color:"#4ECDC4",borderRadius:10,padding:"10px 20px",fontSize:13,fontWeight:800,textDecoration:"none",display:"flex",alignItems:"center",gap:6}}>✉️ SMS</a>
+        </div>
+      </div>
       <div style={{background:"linear-gradient(135deg,#0d0d18,#0a0a12)",border:"1px solid #151520",borderRadius:18,padding:24,maxWidth:520}}>
         <div style={{marginBottom:16}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>Temat</div><input value={title} onChange={e=>setTitle(e.target.value)} placeholder="np. Nie widzę nowych leadów" style={{width:"100%",background:"#08080f",border:"1px solid #151525",borderRadius:10,padding:"11px 14px",color:"#ddd",fontSize:13,outline:"none"}}/></div>
         <div style={{marginBottom:16}}><div style={{color:"#555570",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:7}}>Priorytet</div><div style={{display:"flex",gap:6}}>{[["high","Pilne","#FF6B35"],["medium","Normalne","#F7C59F"],["low","Niskie","#444"]].map(([v,l,c])=><button key={v} onClick={()=>setPrio(v)} style={{flex:1,background:prio===v?c+"15":"#08080f",border:`1px solid ${prio===v?c+"40":"#151525"}`,color:prio===v?c:"#5a5a7a",borderRadius:8,padding:"8px 0",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>)}</div></div>
