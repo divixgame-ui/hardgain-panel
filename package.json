@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@stripe/stripe-js": "^8.9.0",
+    "@supabase/supabase-js": "^2.99.0",
     "ajv": "^8.18.0",
     "jspdf": "^4.2.0",
     "react": "^18.2.0",
