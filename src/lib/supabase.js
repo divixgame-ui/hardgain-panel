@@ -47,7 +47,7 @@ export async function getUser() {
 export async function getUserProfile(userId) {
   const { data, error } = await supabase
     .from('users')
-    .select('*, agencies(*)')
+    .select('*, agencies(*), clients(*)')
     .eq('id', userId)
     .single();
   if (error) throw error;
@@ -57,12 +57,15 @@ export async function getUserProfile(userId) {
 /* ─── REALTIME LEADS ───────────────────────────────────────────── */
 
 export function subscribeToLeads(agencyId, onInsert) {
+  const channelName = agencyId ? `leads-${agencyId}` : 'leads-all';
+  const config = { event: 'INSERT', schema: 'public', table: 'leads' };
+
+  if (agencyId) {
+    config.filter = `agency_id=eq.${agencyId}`;
+  }
+
   return supabase
-    .channel(`leads-${agencyId}`)
-    .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'leads', filter: `agency_id=eq.${agencyId}` },
-      (payload) => onInsert(payload.new)
-    )
+    .channel(channelName)
+    .on('postgres_changes', config, (payload) => onInsert(payload.new))
     .subscribe();
 }
