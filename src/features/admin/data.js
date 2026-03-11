@@ -235,6 +235,20 @@ function groupByCampaign(stats) {
   return grouped;
 }
 
+export function formatAdminLoadError(error) {
+  const rawMessage = error?.message || String(error || "");
+
+  if (rawMessage.includes("schema cache") || rawMessage.includes("Could not find the table")) {
+    return "Supabase odpowiada, ale brakuje tabel aplikacji. Uruchom skrypty z katalogu `supabase/` w SQL Editor projektu.";
+  }
+
+  if (rawMessage.includes("Failed to fetch")) {
+    return "Frontend nie może połączyć się z Supabase. Sprawdź `REACT_APP_SUPABASE_URL`, `REACT_APP_SUPABASE_ANON_KEY` i czy projekt jest dostępny z Vercel.";
+  }
+
+  return rawMessage;
+}
+
 export async function listAgencyClients(agencyId) {
   let query = supabase.from("clients").select("*").order("created_at", { ascending: false });
   query = applyAgencyScope(query, agencyId);
@@ -317,4 +331,3 @@ export async function getClientDetail(clientId, agencyId) {
   const snapshot = await loadAdminDashboard(agencyId);
   return snapshot.clients.find((client) => client.id === clientId) || null;
 }
-

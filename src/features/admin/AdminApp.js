@@ -14,6 +14,7 @@ import { subscribeToLeads } from "../../lib/supabase";
 import {
   buildAdminSnapshot,
   createCalendarEvent,
+  formatAdminLoadError,
   listAgencyCampaigns,
   listAgencyClients,
   listAgencyLeads,
@@ -72,7 +73,7 @@ function useAdminData(user) {
         const next = await loadAdminRaw(agencyId);
         if (!cancelled) setRaw(next);
       } catch (err) {
-        if (!cancelled) setError(err.message || "Nie udało się pobrać danych");
+        if (!cancelled) setError(formatAdminLoadError(err));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -762,4 +763,3 @@ function AdminMain({ user, onLogout }) {
 export default function AdminApp({ user, onLogout }) {
   return <AdminMain user={user} onLogout={onLogout} />;
 }
-

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build
+build/
+.cache/
+
+# Environment - NIGDY nie commituj kluczy API
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel/
+
+# Misc
+.DS_Store
+*.log
+npm-debug.log*
